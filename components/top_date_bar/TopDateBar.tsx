@@ -1,3 +1,5 @@
+//TODO: DELETE
+
 import {StyleSheet, View} from 'react-native';
 import BoxTopDateBar from './BoxTopDateBar';
 

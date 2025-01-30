@@ -1,4 +1,4 @@
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import * as React from 'react';
 import HomeScreen from '../screens/home/HomeScreen';
 
@@ -6,10 +6,15 @@ import HomeScreen from '../screens/home/HomeScreen';
 
 const homeStack = createNativeStackNavigator();
 
-export default function HomeStackNavigator(){
-    return (
-        <homeStack.Navigator initialRouteName='Home' screenOptions={{headerShown:false}}>
-            <homeStack.Screen name="Home" component={HomeScreen} />
-        </homeStack.Navigator> 
-    );
+export default function HomeStackNavigator() {
+  return (
+    <homeStack.Navigator
+      initialRouteName="Home"
+      screenOptions={{
+        headerShown: false,
+        contentStyle: {backgroundColor: 'white'},
+      }}>
+      <homeStack.Screen name="Home" component={HomeScreen} />
+    </homeStack.Navigator>
+  );
 }
