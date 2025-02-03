@@ -5,7 +5,11 @@ import {
   StyleSheet,
   Pressable,
   Animated,
-  Easing
+  Easing,
+  LayoutAnimation,
+  Platform,
+  UIManager,
+  ScrollView,
 } from 'react-native';
 import React, {useState} from 'react';
 import {screenDimensions} from '../../constants/ScreenDimensions';
@@ -14,31 +18,23 @@ import {Calendar, CalendarList, Agenda} from 'react-native-calendars';
 import moment from 'moment';
 import {Colors} from '../../constants/Colors';
 import GoalProgressIndicator from '../../components/GoalProgressIndicator';
-import {useEffect, useRef} from 'react';
+import Icon from 'react-native-vector-icons/Ionicons'; //no error
+import Divider from '../../components/Divider';
+import PrimaryButton from '../../components/buttons/PrimaryButton';
+import ReadingNowBook from '../../components/ReadingNowBook';
+
+if (Platform.OS === 'android') {
+  if (UIManager.setLayoutAnimationEnabledExperimental) {
+    UIManager.setLayoutAnimationEnabledExperimental(true);
+  }
+}
 
 export default function HomeScreen() {
+  // CALENDAR
   const [calendarVisible, setCalendarVisible] = useState(false);
-  const dropAnim = useRef(new Animated.Value(0)).current;
-
   const toggleVisibility = () => {
-    if (calendarVisible) {
-      // Hide the component with animation
-      Animated.timing(dropAnim, {
-        toValue: 0,
-        duration: 3000,
-        easing: Easing.linear,
-        useNativeDriver: true,
-      }).start(() => setCalendarVisible(false));
-    } else {
-      // Show the component with animation
-      setCalendarVisible(true);
-      Animated.timing(dropAnim, {
-        toValue: 1,
-        duration: 3000,
-        easing: Easing.linear,
-        useNativeDriver: true,
-      }).start();
-    }
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    setCalendarVisible(!calendarVisible);
   };
 
   // DATES
@@ -49,34 +45,22 @@ export default function HomeScreen() {
 
   return (
     <SafeAreaView>
-      <Pressable onPress={toggleVisibility}>
-        <View>
-          <Text>Calendar</Text>
-        </View>
-      </Pressable>
-       {/* divider */}
-       <View style={homeScreenStyles.divider}>
-        <Text> </Text>
-      </View>
+      <ScrollView>
+        {/* <Icon name="moon-outline" size={30} color={Colors.primary} /> 
+      TODO: add dark mode */}
 
-      {/* calendar bar */}
-      {calendarVisible && (
-        <Animated.View
-          style={[
-            {
-              opacity: dropAnim,
-              transform: [
-                {
-                  translateY: dropAnim.interpolate({
-                    inputRange: [0, 1],
-                    outputRange: [-50, 0], // Adjust this value to control the drop distance
-                  }),
-                },
-              ],
-            },
-          ]}>
-          <View style={homeScreenStyles.calendarBarContainer}>
-            <CalendarList
+        <Pressable onPress={toggleVisibility}>
+          <View style={homeScreenStyles.calendarButton}>
+            <Icon name="calendar-outline" size={30} color={Colors.primary} />
+          </View>
+        </Pressable>
+
+        <Divider />
+
+        {/* calendar bar */}
+        <View style={homeScreenStyles.calendarBarContainer}>
+          {calendarVisible && (
+            <CalendarList //TODO: change calendar shows date behavior
               horizontal
               pagingEnabled
               futureScrollRange={0}
@@ -102,53 +86,129 @@ export default function HomeScreen() {
                 [selectedDate]: {selected: true},
               }}
             />
+          )}
+        </View>
+
+        <Divider />
+
+        {/* goal section */}
+        <View style={homeScreenStyles.goalSection}>
+        <View style={homeScreenStyles.goalTextContainer}>
+          <Icon name="play-outline" size={30} color={Colors.primary} /> 
+          {/* TODO: dont show icon if not today */}
+            <Text
+              style={{
+                ...homeScreenStyles.goalText,
+                ...globalTextStyles.headerText,
+              }}>
+              {today === selectedDate ? "Today's Goal" : 'Goal'}
+            </Text>
+        </View>
+          <GoalProgressIndicator
+            goalTimeSeconds={14400}
+            elapsedTimeSeconds={7600}
+          />
+        </View>
+
+        <Divider />
+        
+        {/* reading now header */}
+        <View style={homeScreenStyles.readingNowContainer}>
+          <Text
+            style={{
+              ...homeScreenStyles.readingNowHeader,
+              ...globalTextStyles.headerText,
+            }}>
+            Reading Now
+          </Text>
+          <PrimaryButton
+            title="+ Book"
+            onPressFtn={() => console.log('Add book')}
+          />
+          {/* book section */}
+          <View style={homeScreenStyles.bookSection}>
+            <ScrollView>
+              <ReadingNowBook
+                title="Pride and Prejudice"
+                author="Jane Austen"
+                progress={50}
+              />
+              <ReadingNowBook
+                title="The Great Gatsby"
+                author="F. Scott Fitzgerald"
+                progress={30}
+              />
+              <ReadingNowBook
+                title="The Catcher in the Rye"
+                author="J.D. Salinger"
+                progress={10}
+              />
+            </ScrollView>
           </View>
-        </Animated.View>
-      )}
+        </View>
 
-      {/* divider */}
-      <View style={homeScreenStyles.divider}>
-        <Text> </Text>
-      </View>
+        <Divider />
 
-      {/* goal section */}
-      <View style={homeScreenStyles.goalSection}>
-        <Text
-          style={{
-            ...homeScreenStyles.goalText,
-            ...globalTextStyles.headerText,
-          }}>
-          {today === selectedDate ? "Today's Goal" : 'Goal'}
-        </Text>
-        <GoalProgressIndicator />
-      </View>
+        {/* this week header */}
+        <View style={homeScreenStyles.thisWeekHeader}>
+          <Text
+            style={{
+              ...homeScreenStyles.thisWeekHeader,
+              ...globalTextStyles.headerText,
+            }}>
+            This Week
+          </Text>
+        </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }
 
 const homeScreenStyles = StyleSheet.create({
   screen: {},
+  calendarButton: {
+    marginHorizontal: 5,
+    marginBottom: 5,
+    alignItems: 'flex-end',
+    padding: 2,
+  },
   calendarBarContainer: {
     // height: screenDimensions.height * 0.3,
     // borderWidth: 2,
     // borderColor: 'red',
   },
 
-  divider: {
-    backgroundColor: Colors.lightGray,
-    height: screenDimensions.height * 0.025,
-  },
   goalSection: {
-    height: screenDimensions.height * 0.2,
+    height: screenDimensions.height * 0.22,
     padding: 10,
     alignItems: 'center',
     // borderWidth: 2,
     // borderColor: 'red',
-  }, //TODO:progress bar???
+  }, //DONE:progress bar???
+  goalTextContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderWidth: 2,
+    borderColor: 'red',
+  },
   goalText: {},
-  readingNowHeaderContainer: {},
-  readingNowHeader: {},
-  bookSection: {},
-  thisWeekHeader: {},
+  readingNowContainer: {
+    alignItems: 'center',
+    padding: 10,
+    // borderWidth: 2,
+    // borderColor: 'red',
+  },
+  readingNowHeader: {
+    padding: 10,
+    alignItems: 'center',
+  },
+  bookSection: {
+    paddingVertical: 20,
+    height: screenDimensions.height * 0.35,
+  },
+  thisWeekHeader: {
+    padding: 10,
+    alignItems: 'center',
+  },
   thisWeekGraph: {}, //TODO: graph???
 });

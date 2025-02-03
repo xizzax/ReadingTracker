@@ -2,23 +2,76 @@ import {View, Text, StyleSheet} from 'react-native';
 import {AnimatedCircularProgress} from 'react-native-circular-progress';
 import {Circle} from 'react-native-svg';
 import {Colors} from '../constants/Colors';
+import {screenDimensions} from '../constants/ScreenDimensions';
+import {useState, useEffect} from 'react';
+import {FlipInYLeft} from 'react-native-reanimated';
+import {globalTextStyles} from '../styles/TextStyles';
 
-export default function GoalProgressIndicator() {
+interface GoalProgressIndicatorProps {
+  goalTimeSeconds: number;
+  elapsedTimeSeconds: number;
+}
+
+export default function GoalProgressIndicator(
+  props: GoalProgressIndicatorProps,
+) {
+  const {goalTimeSeconds, elapsedTimeSeconds} = props;
+  const [fill, setFill] = useState(
+    (elapsedTimeSeconds / goalTimeSeconds) * 100,
+  );
+
+  //elapsed time minutes and hours
+  const elapsedTimeMinutes = Math.floor(elapsedTimeSeconds / 60);
+  const elapsedTimeHours = Math.floor(elapsedTimeMinutes / 60);
+  const elapsedTimeMinutesLeft = elapsedTimeMinutes % 60;
+
+  //goal time minutes and hours
+  const goalTimeMinutes = Math.floor(goalTimeSeconds / 60);
+  const goalTimeHours = Math.floor(goalTimeMinutes / 60);
+  const goalTimeMinutesLeft = goalTimeMinutes % 60;
+
+  useEffect(() => {
+    setFill((elapsedTimeSeconds / goalTimeSeconds) * 100);
+  }, [elapsedTimeSeconds, goalTimeSeconds]);
+
   return (
     <View style={goalProgressIndicatorStyles.container}>
       <AnimatedCircularProgress
-        size={200}
-        width={5}
-        fill={70}
+        size={screenDimensions.height * 0.3}
+        width={10}
+        lineCap="round"
+        fill={fill}
         tintColor={Colors.primary}
-        arcSweepAngle={180}
-        rotation={270}
+        arcSweepAngle={200}
+        rotation={260}
         backgroundColor={Colors.lightGray}>
         {fill => (
-          <View>
-            <Text>{'3 out 30 min goals'}</Text>
-            <Text>{'70%'}</Text>
-            <Text>{'3 out 30 min goals'}</Text>
+          <View style={goalProgressIndicatorStyles.textContainer}>
+            <Text
+              style={{
+                ...globalTextStyles.headerText,
+                ...goalProgressIndicatorStyles.elapsedTimeText,
+              }}>
+              {elapsedTimeHours.toString().padStart(2, '0')}:
+              {elapsedTimeMinutesLeft.toString().padStart(2, '0')}
+            </Text>
+            <Text
+              style={{
+                ...globalTextStyles.bodyText,
+                ...goalProgressIndicatorStyles.goalText,
+              }}>
+              of your{' '}
+              {goalTimeHours > 0 || goalTimeMinutesLeft > 0
+                ? `${goalTimeHours > 0 ? `${goalTimeHours} hour` : ''}${
+                    goalTimeHours > 0 && goalTimeMinutesLeft > 0 ? ' ' : ''
+                  }${
+                    goalTimeMinutesLeft > 0
+                      ? `${goalTimeMinutesLeft} minute`
+                      : ''
+                  }`
+                : '0 hour 0 minute'}{' '}
+              goal
+            </Text>
           </View>
         )}
       </AnimatedCircularProgress>
@@ -29,5 +82,20 @@ export default function GoalProgressIndicator() {
 const goalProgressIndicatorStyles = StyleSheet.create({
   container: {
     paddingTop: 10,
+  },
+  textContainer: {
+    flex: 1,
+    height: screenDimensions.height * 0.1,
+    marginTop: 30,
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    // borderWidth: 2,
+    borderColor: 'red',
+  },
+  elapsedTimeText: {
+    fontSize: 40,
+  },
+  goalText: {
+    color: Colors.gray,
   },
 });

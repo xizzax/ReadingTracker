@@ -14,6 +14,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import AppNavigator from './stacks/AppNavigator';
 
 function App(): React.JSX.Element {
+  //TODO: reduc toolkit add
   return <AppNavigator />;
 }
 
