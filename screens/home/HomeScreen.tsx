@@ -22,6 +22,7 @@ import Icon from 'react-native-vector-icons/Ionicons'; //no error
 import Divider from '../../components/Divider';
 import PrimaryButton from '../../components/buttons/PrimaryButton';
 import ReadingNowBook from '../../components/ReadingNowBook';
+import {globalStyleNumerics} from '../../constants/StyleNumerics';
 
 if (Platform.OS === 'android') {
   if (UIManager.setLayoutAnimationEnabledExperimental) {
@@ -29,7 +30,7 @@ if (Platform.OS === 'android') {
   }
 }
 
-export default function HomeScreen() {
+export default function HomeScreen({navigation}: any) {
   // CALENDAR
   const [calendarVisible, setCalendarVisible] = useState(false);
   const toggleVisibility = () => {
@@ -51,7 +52,11 @@ export default function HomeScreen() {
 
         <Pressable onPress={toggleVisibility}>
           <View style={homeScreenStyles.calendarButton}>
-            <Icon name="calendar-outline" size={30} color={Colors.primary} />
+            <Icon
+              name="calendar-outline"
+              size={globalStyleNumerics.iconSize}
+              color={Colors.primary}
+            />
           </View>
         </Pressable>
 
@@ -93,9 +98,8 @@ export default function HomeScreen() {
 
         {/* goal section */}
         <View style={homeScreenStyles.goalSection}>
-        <View style={homeScreenStyles.goalTextContainer}>
-          <Icon name="play-outline" size={30} color={Colors.primary} /> 
-          {/* TODO: dont show icon if not today */}
+          <View style={homeScreenStyles.goalTextContainer}>
+            {/* TODO: dont show icon if not today */}
             <Text
               style={{
                 ...homeScreenStyles.goalText,
@@ -103,15 +107,26 @@ export default function HomeScreen() {
               }}>
               {today === selectedDate ? "Today's Goal" : 'Goal'}
             </Text>
-        </View>
-          <GoalProgressIndicator
-            goalTimeSeconds={14400}
-            elapsedTimeSeconds={7600}
-          />
+            <Pressable //TODO: instead of this one, click on book to continue reading and log stats for that
+              onPress={() => navigation.navigate('Timer')}
+              style={homeScreenStyles.playIconContainer}>
+              <Icon
+                name="play-outline"
+                size={globalStyleNumerics.iconSize}
+                color={Colors.primary}
+              />
+            </Pressable>
+          </View>
+          <View style={homeScreenStyles.goalProgressIndicatorContainer}>
+            <GoalProgressIndicator
+              goalTimeSeconds={14400}
+              elapsedTimeSeconds={7600}
+            />
+          </View>
         </View>
 
         <Divider />
-        
+
         {/* reading now header */}
         <View style={homeScreenStyles.readingNowContainer}>
           <Text
@@ -181,22 +196,24 @@ const homeScreenStyles = StyleSheet.create({
   goalSection: {
     height: screenDimensions.height * 0.22,
     padding: 10,
-    alignItems: 'center',
-    // borderWidth: 2,
-    // borderColor: 'red',
   }, //DONE:progress bar???
   goalTextContainer: {
-    flexDirection: 'row',
+    position: 'relative', // This allows absolutely positioned children relative to this container
+    flexDirection: 'row', // Arrange children in a row
+    justifyContent: 'center', // Center the Text horizontally within the container
     alignItems: 'center',
-    borderWidth: 2,
-    borderColor: 'red',
+  },
+  playIconContainer: {
+    position: 'absolute', // Remove the icon from the normal flex flow
+    right: 0,
+  },
+  goalProgressIndicatorContainer: {
+    alignItems: 'center',
   },
   goalText: {},
   readingNowContainer: {
     alignItems: 'center',
     padding: 10,
-    // borderWidth: 2,
-    // borderColor: 'red',
   },
   readingNowHeader: {
     padding: 10,

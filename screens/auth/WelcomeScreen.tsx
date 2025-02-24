@@ -4,7 +4,7 @@ import SecondaryButton from '../../components/buttons/SecondaryButton';
 import { screenDimensions } from '../../constants/ScreenDimensions';
 
 
-export default function WelcomeScreen({navigation}) {
+export default function WelcomeScreen({navigation}:any) {
   return (
     <SafeAreaView style={{flex: 1}}>
       <View style={welcomeScreenStyles.screen}>
