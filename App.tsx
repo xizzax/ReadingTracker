@@ -1,21 +1,15 @@
 import React from 'react';
-import type {PropsWithChildren} from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from 'react-native';
-import WelcomeScreen from './screens/auth/WelcomeScreen';
-import {NavigationContainer} from '@react-navigation/native';
+import {Provider} from 'react-redux';
 import AppNavigator from './stacks/AppNavigator';
+import {store} from './state/store';
 
 function App(): React.JSX.Element {
-  //TODO: reduc toolkit add
-  return <AppNavigator />;
+  //DONE: reduc toolkit add
+  return (
+    <Provider store={store}>
+      <AppNavigator />
+    </Provider>
+  );
 }
 
 export default App;
