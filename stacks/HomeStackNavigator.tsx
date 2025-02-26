@@ -1,7 +1,7 @@
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import * as React from 'react';
 import HomeScreen from '../screens/home/HomeScreen';
-import StopwatchScreen from '../screens/home/TimerScreen';
+import StopwatchScreen from '../screens/home/StopwatchScreen';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {Colors} from '../constants/Colors';
 import { globalStyleNumerics } from '../constants/StyleNumerics';
@@ -19,16 +19,17 @@ export default function HomeStackNavigator() {
         contentStyle: {backgroundColor: 'white'},
       }}>
       <homeStack.Screen name="Home" component={HomeScreen} />
-      <homeStack.Screen name="Timer" component={StopwatchScreen} 
-      options={{
-        headerShown: true,
-        headerTitle: 'Track Your Reading',
-        headerTitleStyle: {color: Colors.black, fontFamily: 'Rounded Mplus 1c Bold'},
-        headerStyle: {backgroundColor: Colors.secondary},
-        headerTintColor: Colors.black,
-        headerBackButtonDisplayMode: 'minimal',
-        headerShadowVisible: false,
-        }} />
+      <homeStack.Screen name="Stopwatch" component={StopwatchScreen} 
+      // options={{
+      //   headerShown: true,
+      //   headerTitle: 'Track Your Reading',
+      //   headerTitleStyle: {color: Colors.black, fontFamily: 'Rounded Mplus 1c Bold'},
+      //   headerStyle: {backgroundColor: Colors.secondary},
+      //   headerTintColor: Colors.black,
+      //   headerBackButtonDisplayMode: 'minimal',
+      //   headerShadowVisible: false,
+      //   }} 
+      />
     </homeStack.Navigator>
   );
 }

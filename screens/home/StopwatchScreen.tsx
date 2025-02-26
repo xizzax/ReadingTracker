@@ -1,4 +1,11 @@
-import {Text, View, SafeAreaView, StyleSheet, Pressable, Animated} from 'react-native';
+import {
+  Text,
+  View,
+  SafeAreaView,
+  StyleSheet,
+  Pressable,
+  Animated,
+} from 'react-native';
 import {CountdownCircleTimer} from 'react-native-countdown-circle-timer';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {Colors} from '../../constants/Colors';
@@ -6,6 +13,17 @@ import {globalStyleNumerics} from '../../constants/StyleNumerics';
 import CircularTimer from 'react-native-circular-timer';
 import React, {useEffect, useRef, useState} from 'react';
 import {globalTextStyles} from '../../styles/TextStyles';
+import {useDispatch, useSelector} from 'react-redux';
+import {
+  setPaused,
+  setRunning,
+  setStopped,
+} from '../../state/slices/TimerStateSlice';
+import {
+  setElapsedTime,
+  incrementElapsedTime,
+} from '../../state/slices/TimeElapsedSlice';
+import Stopwatch from '../../components/Stopwatch';
 
 interface StopwatchScreenProps {
   //TODO: props
@@ -13,34 +31,39 @@ interface StopwatchScreenProps {
 
 export default function StopwatchScreen(props: StopwatchScreenProps) {
   //--------------------------------------------
+  //redux setup
+  //--------------------------------------------
+  const stopwatchStateFromStore = useSelector(
+    state => state.timerState.timerState,
+  );
+  const dispatch = useDispatch();
+
+  //--------------------------------------------
   //hour minute calculations and state
   //--------------------------------------------
-  const [secondsElapsed, setSecondsElapsed] = useState(0);
-  const [minutesElapsed, setMinutesElapsed] = useState(0);
-  const [hoursElapsed, setHoursElapsed] = useState(0);
+  // const [secondsElapsed, setSecondsElapsed] = useState(0);
+  // const [minutesElapsed, setMinutesElapsed] = useState(0);
+  // const [hoursElapsed, setHoursElapsed] = useState(0);
 
   const [totalSecondsElapsed, setTotalSecondsElapsed] = useState(0);
 
+  // TODO: remove this and only use redux for this -- do we even need this without redux
   const [stopwatchState, setStopwatchState] = useState<
     'running' | 'paused' | 'stopped'
   >('paused');
 
-  useEffect(() => {
-    hourMinuteSecondCalculation(totalSecondsElapsed);
-  }, [totalSecondsElapsed]);
 
   const timeRef = useRef<ReturnType<typeof setInterval> | null>(null); //used to store interval
 
   const startTimer = () => {
     if (stopwatchState != 'running') {
       setStopwatchState('running');
-      console.log(stopwatchState);
+      dispatch(setRunning());
 
       timeRef.current = setInterval(() => {
-        setTotalSecondsElapsed(prevTime => prevTime + 1);
-        console.log(totalSecondsElapsed);
+        // const time = useSelector(state =>state.elapsedTimeState.elapsedTime);
+        dispatch(incrementElapsedTime());
       }, 1000);
-      hourMinuteSecondCalculation(totalSecondsElapsed);
     }
   };
   const stopTimer = () => {
@@ -48,9 +71,8 @@ export default function StopwatchScreen(props: StopwatchScreenProps) {
       clearInterval(timeRef.current);
       timeRef.current = null;
       setStopwatchState('stopped');
-      setTotalSecondsElapsed(0);
-      hourMinuteSecondCalculation(totalSecondsElapsed);
-      console.log(stopwatchState);
+      dispatch(setStopped());
+      dispatch(setElapsedTime(0));
     } else {
       timeRef.current = setInterval(() => {
         setTotalSecondsElapsed(prevTime => prevTime);
@@ -58,27 +80,19 @@ export default function StopwatchScreen(props: StopwatchScreenProps) {
       clearInterval(timeRef.current);
       timeRef.current = null;
       setStopwatchState('stopped');
-      setTotalSecondsElapsed(0);
-      hourMinuteSecondCalculation(totalSecondsElapsed);
-      console.log(stopwatchState);
+      dispatch(setStopped());
+      dispatch(setElapsedTime(0));
     }
   };
-  //TODO: save timer state in redux until stopped
+  //TODO: save timer state in redux until stopped for persistence
   const pauseTimer = () => {
     if (timeRef.current) {
       clearInterval(timeRef.current);
       timeRef.current = null;
       setStopwatchState('paused');
+      dispatch(setPaused());
     }
   };
-
-  const hourMinuteSecondCalculation = (totalSeconds: number) => {
-    const minutes = Math.floor(totalSeconds / 60);
-    setHoursElapsed(Math.floor(minutes / 60));
-    setMinutesElapsed(minutes % 60);
-    setSecondsElapsed(totalSeconds % 60);
-  };
-
 
   //--------------------------------------------
   // color animations
@@ -105,7 +119,6 @@ export default function StopwatchScreen(props: StopwatchScreenProps) {
   });
 
   return (
-    //TODO: auto imply leading
     <View style={stopwatchScreenStyles.screen}>
       <Animated.View
         style={[
@@ -114,61 +127,56 @@ export default function StopwatchScreen(props: StopwatchScreenProps) {
             backgroundColor: backgroundInterpolatedColor,
           },
         ]}>
-        {/* TODO: get rid<Text
+        <Text
           style={{
             ...globalTextStyles.subheaderText,
             ...stopwatchScreenStyles.titleText,
           }}>
           Track Your Reading Progress
-        </Text> */}
-        <Text
-          style={{
-            ...globalTextStyles.headerText,
-            ...stopwatchScreenStyles.timeText, 
-          }}>
-          {hoursElapsed.toString().padStart(2, '0')}:
-          {minutesElapsed.toString().padStart(2, '0')}:
-          {secondsElapsed.toString().padStart(2, '0')}
         </Text>
+
+        <View>
+          <Stopwatch />
+        </View>
       </Animated.View>
 
       <View style={stopwatchScreenStyles.buttonsContainer}>
         {stopwatchState !== 'running' && (
           <>
-            <Animated.View
-              style={[
-                stopwatchScreenStyles.mainButtonContainer,
-                {
-                  backgroundColor: interpolatedColor,
-                },
-              ]}>
-              <Pressable onPress={startTimer}>
+            <Pressable onPress={startTimer}>
+              <Animated.View
+                style={[
+                  stopwatchScreenStyles.mainButtonContainer,
+                  {
+                    backgroundColor: interpolatedColor,
+                  },
+                ]}>
                 <Icon
                   name="play-outline"
                   size={globalStyleNumerics.iconSize + 10}
                   color={Colors.white}
                 />
-              </Pressable>
-            </Animated.View>
+              </Animated.View>
+            </Pressable>
           </>
         )}
         {stopwatchState === 'running' && (
           <>
-            <Animated.View
-              style={[
-                stopwatchScreenStyles.mainButtonContainer,
-                {
-                  backgroundColor: interpolatedColor,
-                },
-              ]}>
-              <Pressable onPress={pauseTimer}>
+            <Pressable onPress={pauseTimer}>
+              <Animated.View
+                style={[
+                  stopwatchScreenStyles.mainButtonContainer,
+                  {
+                    backgroundColor: interpolatedColor,
+                  },
+                ]}>
                 <Icon
                   name="pause-outline"
                   size={globalStyleNumerics.iconSize + 10}
                   color={Colors.white}
                 />
-              </Pressable>
-            </Animated.View>
+              </Animated.View>
+            </Pressable>
           </>
         )}
         <View style={stopwatchScreenStyles.stopButton}>
@@ -203,9 +211,6 @@ const stopwatchScreenStyles = StyleSheet.create({
   bottomContainer: {
     flex: 3,
     padding: 20,
-  },
-  timeText: {
-    fontSize: 40,
   },
   titleText: {
     fontSize: 20,

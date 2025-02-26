@@ -108,7 +108,7 @@ export default function HomeScreen({navigation}: any) {
               {today === selectedDate ? "Today's Goal" : 'Goal'}
             </Text>
             <Pressable //TODO: instead of this one, click on book to continue reading and log stats for that
-              onPress={() => navigation.navigate('Timer')}
+              onPress={() => navigation.navigate('Stopwatch')}
               style={homeScreenStyles.playIconContainer}>
               <Icon
                 name="play-outline"
