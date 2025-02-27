@@ -5,6 +5,7 @@ import StopwatchScreen from '../screens/home/StopwatchScreen';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {Colors} from '../constants/Colors';
 import { globalStyleNumerics } from '../constants/StyleNumerics';
+import SearchBookScreen from '../screens/home/SearchBookScreen';
 
 //nested navigator for home stack
 
@@ -19,17 +20,9 @@ export default function HomeStackNavigator() {
         contentStyle: {backgroundColor: 'white'},
       }}>
       <homeStack.Screen name="Home" component={HomeScreen} />
-      <homeStack.Screen name="Stopwatch" component={StopwatchScreen} 
-      // options={{
-      //   headerShown: true,
-      //   headerTitle: 'Track Your Reading',
-      //   headerTitleStyle: {color: Colors.black, fontFamily: 'Rounded Mplus 1c Bold'},
-      //   headerStyle: {backgroundColor: Colors.secondary},
-      //   headerTintColor: Colors.black,
-      //   headerBackButtonDisplayMode: 'minimal',
-      //   headerShadowVisible: false,
-      //   }} 
-      />
+      <homeStack.Screen name="Stopwatch" component={StopwatchScreen} />
+      <homeStack.Screen name="Search Book" component={SearchBookScreen} />
+
     </homeStack.Navigator>
   );
 }

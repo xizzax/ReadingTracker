@@ -138,7 +138,7 @@ export default function HomeScreen({navigation}: any) {
           </Text>
           <PrimaryButton
             title="+ Book"
-            onPressFtn={() => console.log('Add book')}
+            onPressFtn={() => navigation.navigate('Search Book')}
           />
           {/* book section */}
           <View style={homeScreenStyles.bookSection}>

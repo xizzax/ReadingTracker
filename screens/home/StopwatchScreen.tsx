@@ -24,6 +24,7 @@ import {
   incrementElapsedTime,
 } from '../../state/slices/TimeElapsedSlice';
 import Stopwatch from '../../components/Stopwatch';
+import { screenDimensions } from '../../constants/ScreenDimensions';
 
 interface StopwatchScreenProps {
   //TODO: props
@@ -98,6 +99,7 @@ export default function StopwatchScreen(props: StopwatchScreenProps) {
   // color animations
   //--------------------------------------------
   const colorAnim = useState(new Animated.Value(0))[0]; // 0 = paused/stopped (inactive), 1 = running
+  
 
   useEffect(() => {
     // When the stopwatchState changes, animate to the correct value.
@@ -112,6 +114,10 @@ export default function StopwatchScreen(props: StopwatchScreenProps) {
     inputRange: [0, 1],
     outputRange: [Colors.primary, Colors.secondary],
   });
+  const containerHeightAnim = colorAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: [screenDimensions.height * 2/5,screenDimensions.height * 4/5]
+  });
 
   const backgroundInterpolatedColor = colorAnim.interpolate({
     inputRange: [0, 1],
@@ -125,6 +131,7 @@ export default function StopwatchScreen(props: StopwatchScreenProps) {
           stopwatchScreenStyles.timerContainer,
           {
             backgroundColor: backgroundInterpolatedColor,
+            height: containerHeightAnim,
           },
         ]}>
         <Text
@@ -149,6 +156,7 @@ export default function StopwatchScreen(props: StopwatchScreenProps) {
                   stopwatchScreenStyles.mainButtonContainer,
                   {
                     backgroundColor: interpolatedColor,
+                 
                   },
                 ]}>
                 <Icon
@@ -202,7 +210,7 @@ const stopwatchScreenStyles = StyleSheet.create({
     alignItems: 'center',
   },
   timerContainer: {
-    flex: 2,
+    // flex: 2,
     flexDirection: 'column',
     justifyContent: 'space-evenly',
     alignItems: 'center',

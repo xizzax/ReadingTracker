@@ -1,6 +1,7 @@
 import {View, Text, StyleSheet, Pressable} from 'react-native';
 import { Colors } from '../../constants/Colors';
 import { screenDimensions } from '../../constants/ScreenDimensions';
+import { globalStyleNumerics } from '../../constants/StyleNumerics';
 
 interface primaryBtnProps {
     title: string;
@@ -22,7 +23,7 @@ background: {
     backgroundColor: Colors.primary,
     width: screenDimensions.width * 0.85,
     height: 60,
-    borderRadius: 50,
+    borderRadius: globalStyleNumerics.borderRadius,
     justifyContent: "center",
     alignItems: "center",
 },
