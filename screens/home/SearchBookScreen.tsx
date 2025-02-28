@@ -1,60 +1,73 @@
-import {View, Text, SafeAreaView, StyleSheet, TextInput} from 'react-native';
-import {useSearchQuery} from '../../state/slices/ApiSlice';
+import {
+  View,
+  Text,
+  SafeAreaView,
+  StyleSheet,
+  TextInput,
+  LayoutAnimation,
+  Pressable,
+  ScrollView,
+} from 'react-native';
+import {useLazySearchQuery} from '../../state/slices/ApiSlice';
 import {Colors} from '../../constants/Colors';
 import {globalStyleNumerics} from '../../constants/StyleNumerics';
 import Icon from 'react-native-vector-icons/Ionicons'; //no error
 import {globalTextStyles} from '../../styles/TextStyles';
+import {useState} from 'react';
+import PrimaryButton from '../../components/buttons/PrimaryButton';
+import {screenDimensions} from '../../constants/ScreenDimensions';
+import BookTile from '../../components/BookTile';
 
 export default function SearchBookScreen() {
-  // const {
-  //   data: books,
-  //   isLoading,
-  //   error,
-  // } = useSearchQuery('the+eye+of+the+world');
+  //---------------------------------------
+  //search handling
+  //---------------------------------------
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searched, setSearched] = useState(false);
+  const [triggerSearch, {data: books, isLoading, error}] = useLazySearchQuery();
 
-  // if (isLoading) {
-  //   console.log('loading...');
-  // }
-  // if (error) {
-  //   console.log('error: ' + error);
-  // }
-
-  // console.log(books);
+  const handleSubmit = (query: string) => {
+    const formattedQuery = query.toLowerCase().split(' ').join('+');
+    triggerSearch(formattedQuery);
+    setSearched(true);
+  };
 
   return (
     <SafeAreaView style={addBookScreenStyles.screen}>
       <View style={addBookScreenStyles.searchHeader}>
         <View style={addBookScreenStyles.searchBar}>
           <TextInput
-            placeholder="search query"
+            placeholder="Search books"
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+            onSubmitEditing={() => handleSubmit(searchQuery)}
             style={addBookScreenStyles.textInput}
-          
           />
-          <Icon
-              name="search-circle-outline"
-              size={20}
-              color={Colors.black}
-              style={{
-                paddingTop: 3,
-              }}
-              onPress={() => console.log('down press')}
-            />
-        </View>
-        <View style={addBookScreenStyles.moreOptionsContainer}>
-          <Text style={{...globalTextStyles.bodyText}}>More options </Text>
-          <Icon
-            name="chevron-down-outline"
-            size={20}
-            color={Colors.black}
-            style={{
-              paddingTop: 3,
-            }}
-            onPress={() => console.log('down press')}
+          <PrimaryButton
+            onPressFtn={() => handleSubmit(searchQuery)}
+            title="Search"
+            height={36}
+            width={screenDimensions.width * 0.25}
+            fontSize={14}
           />
         </View>
       </View>
       <View style={addBookScreenStyles.resultsContainer}>
-        <Text>Search up your next read!</Text>
+        {searched && (
+          <ScrollView>
+            {books?.map((book, index) => (
+              <BookTile
+                key={index}
+                title={book.title}
+                // subtitle={book.subtitle}
+                author={book.authors}
+                // genres={book.genres}
+                coverUrl={book.coverUrl}
+                // isbn={book.isbn}
+              />
+            ))}
+          </ScrollView>
+        )}
       </View>
     </SafeAreaView>
   );
@@ -62,35 +75,37 @@ export default function SearchBookScreen() {
 
 const addBookScreenStyles = StyleSheet.create({
   screen: {
-    flex: 1,
-
-    justifyContent: 'center',
+    // flex: 1,
+    // justifyContent: 'center',
     alignItems: 'center',
   },
   searchHeader: {
-    flex: 1,
-    borderBottomColor: 'black',
-    borderBottomWidth: 2,
     width: '90%',
+    flexGrow: 1,
   },
   resultsContainer: {
-    flex: 4,
+    // flex: 4,
     width: '90%',
     paddingVertical: 20,
   },
-  searchBar:{
-    
+  searchBar: {
+    alignItems: 'flex-end',
+    // borderColor: "red",
+    // borderWidth: 2,
   },
   textInput: {
     borderColor: Colors.gray,
     borderWidth: 0.5,
     paddingVertical: 5,
     paddingHorizontal: 10,
+
     fontFamily: 'Rounded Mplus 1c Medium',
     fontSize: 16,
     borderRadius: globalStyleNumerics.borderRadius,
+    width: '100%',
+    marginVertical: 5,
   },
-  moreOptionsContainer: {
+  moreOptionsButtonContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-end',

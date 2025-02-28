@@ -1,36 +1,43 @@
 import {View, Text, StyleSheet, Pressable} from 'react-native';
-import { Colors } from '../../constants/Colors';
-import { screenDimensions } from '../../constants/ScreenDimensions';
-import { globalStyleNumerics } from '../../constants/StyleNumerics';
+import {Colors} from '../../constants/Colors';
+import {screenDimensions} from '../../constants/ScreenDimensions';
+import {globalStyleNumerics} from '../../constants/StyleNumerics';
 
 interface primaryBtnProps {
-    title: string;
-    onPressFtn: ()=>void;
-};
+  title: string;
+  onPressFtn: () => void;
+  height?: number | null;
+  width?: number | null;
+  fontSize?: number | null;
+}
 
-export default function PrimaryButton(props:primaryBtnProps){
-    return (
-        <Pressable onPress={props.onPressFtn}>
-            <View style={primaryButtonStyles.background}>
-                <Text style={primaryButtonStyles.text}>{props.title}</Text>
-            </View>
-        </Pressable>
-    );
+export default function PrimaryButton(props: primaryBtnProps) {
+  return (
+    <Pressable onPress={props.onPressFtn}>
+      <View
+        style={{
+          ...primaryButtonStyles.background,
+          height: props.height ?? 60,
+          width: props.width ?? screenDimensions.width * 0.85,
+        }}>
+        <Text
+          style={{...primaryButtonStyles.text, fontSize: props.fontSize ?? 20}}>
+          {props.title}
+        </Text>
+      </View>
+    </Pressable>
+  );
 }
 
 const primaryButtonStyles = StyleSheet.create({
-background: {
+  background: {
     backgroundColor: Colors.primary,
-    width: screenDimensions.width * 0.85,
-    height: 60,
     borderRadius: globalStyleNumerics.borderRadius,
-    justifyContent: "center",
-    alignItems: "center",
-},
-text: {
-    color:Colors.black,
-    fontSize: 20,
-    fontWeight: "600",
-}
-
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  text: {
+    color: Colors.white,
+    fontWeight: '600',
+  },
 });
