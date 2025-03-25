@@ -23,6 +23,7 @@ import Divider from '../../components/Divider';
 import PrimaryButton from '../../components/buttons/PrimaryButton';
 import ReadingNowBook from '../../components/ReadingNowBook';
 import {globalStyleNumerics} from '../../constants/StyleNumerics';
+import {signout} from '../../firebase/firebase_auth/SignOut';
 
 if (Platform.OS === 'android') {
   if (UIManager.setLayoutAnimationEnabledExperimental) {
@@ -50,15 +51,31 @@ export default function HomeScreen({navigation}: any) {
         {/* <Icon name="moon-outline" size={30} color={Colors.primary} /> 
       TODO: add dark mode */}
 
-        <Pressable onPress={toggleVisibility}>
-          <View style={homeScreenStyles.calendarButton}>
-            <Icon
-              name="calendar-outline"
-              size={globalStyleNumerics.iconSize}
-              color={Colors.primary}
-            />
-          </View>
-        </Pressable>
+        <View style={homeScreenStyles.topHeader}>
+          <Pressable
+            onPress={() => {
+              console.log('logout goes here');
+              signout();
+            }}>
+            <View style={homeScreenStyles.calendarButton}>
+              <Icon
+                name="log-out-outline"
+                size={globalStyleNumerics.iconSize}
+                color={Colors.primary}
+              />
+            </View>
+          </Pressable>
+
+          <Pressable onPress={toggleVisibility}>
+            <View style={homeScreenStyles.calendarButton}>
+              <Icon
+                name="calendar-outline"
+                size={globalStyleNumerics.iconSize}
+                color={Colors.primary}
+              />
+            </View>
+          </Pressable>
+        </View>
 
         <Divider />
 
@@ -181,6 +198,10 @@ export default function HomeScreen({navigation}: any) {
 
 const homeScreenStyles = StyleSheet.create({
   screen: {},
+  topHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
   calendarButton: {
     marginHorizontal: 5,
     marginBottom: 5,
