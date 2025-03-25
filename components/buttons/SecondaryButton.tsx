@@ -6,13 +6,20 @@ import { globalStyleNumerics } from '../../constants/StyleNumerics';
 interface SecondaryBtnProps {
   title: string;
   onPressFtn: () => void;
+  height?: number | null;
+  width?: number | null;
+  fontSize?: number | null;
 }
 
 export default function SecondaryButton(props: SecondaryBtnProps) {
   return (
     <Pressable onPress={props.onPressFtn}>
-      <View style={secondaryButtonStyles.background}>
-        <Text style={secondaryButtonStyles.text}>{props.title}</Text>
+      <View style={{
+         ...secondaryButtonStyles.background,
+                  height: props.height ?? 60,
+                  width: props.width ?? screenDimensions.width * 0.85,
+      }}>
+        <Text style={{...secondaryButtonStyles.text, fontSize: props.fontSize ?? 20}}>{props.title}</Text>
       </View>
     </Pressable>
   );
@@ -21,16 +28,12 @@ export default function SecondaryButton(props: SecondaryBtnProps) {
 const secondaryButtonStyles = StyleSheet.create({
   background: {
     backgroundColor: Colors.secondary,
-    width: screenDimensions.width * 0.85,
-    height: 60,
     borderRadius: globalStyleNumerics.borderRadius,
-
     justifyContent: 'center',
     alignItems: 'center',
   },
   text: {
     color: Colors.black,
-    fontSize: 20,
     fontWeight: '600',
   },
 });

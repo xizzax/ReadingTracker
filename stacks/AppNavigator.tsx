@@ -3,10 +3,16 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import WelcomeScreen from '../screens/auth/WelcomeScreen';
 import HomeScreen from '../screens/home/HomeScreen';
 import HomeStackNavigator from './HomeStackNavigator';
+import AuthStackNavigator from './AuthStackNavigator';
 
 const stack = createNativeStackNavigator();
+//TODO: get rid of this
 
-export default function AppNavigator() {
+type AppNavigatorProps = {
+  stack: 'auth' | 'home';
+};
+
+export default function AppNavigator(props: AppNavigatorProps) {
   return (
     <NavigationContainer>
       <stack.Navigator
@@ -14,9 +20,9 @@ export default function AppNavigator() {
           headerShown: false,
           contentStyle: {backgroundColor: 'white'}, // setting app background to be white
         }}
-        initialRouteName="Welcome">
-        <stack.Screen name="Welcome" component={WelcomeScreen} />
-        {/*TODO: make auth stack and add here*/}
+        initialRouteName={props.stack === 'auth' ? 'AuthStack' : 'HomeStack'}>
+        <stack.Screen name="AuthStack" component={AuthStackNavigator} />
+        {/*DONE: make auth stack and add here*/}
         <stack.Screen name="HomeStack" component={HomeStackNavigator} />
       </stack.Navigator>
     </NavigationContainer>

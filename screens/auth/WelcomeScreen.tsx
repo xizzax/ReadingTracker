@@ -25,12 +25,10 @@ export default function WelcomeScreen({navigation}:any) {
           <View style={{marginBottom: 10}}>
             <PrimaryButton title='Start Reading' onPressFtn={()=>{
               console.log("Start Reading Button Pressed"); //TODO: functionality to go to next screen
-              navigation.navigate('HomeStack');
+              navigation.navigate('SignIn');
             }}/>
           </View>
-          <SecondaryButton title='Create Account' onPressFtn={()=>{
-              console.log("Create Account Button Pressed"); //TODO: functionality to go to next screen
-            }} />
+         
         </View>
 
       </View>
