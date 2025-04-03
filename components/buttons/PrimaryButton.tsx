@@ -18,7 +18,7 @@ export default function PrimaryButton(props: primaryBtnProps) {
         style={{
           ...primaryButtonStyles.background,
           height: props.height ?? 60,
-          width: props.width ?? screenDimensions.width * 0.85,
+          width: props.width ?? screenDimensions.width * 0.9,
         }}>
         <Text
           style={{...primaryButtonStyles.text, fontSize: props.fontSize ?? 20}}>

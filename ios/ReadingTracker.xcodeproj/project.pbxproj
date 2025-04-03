@@ -30,6 +30,7 @@
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = ReadingTracker/Info.plist; sourceTree = "<group>"; };
 		13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = PrivacyInfo.xcprivacy; path = ReadingTracker/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		20D96F37C6D34B9A71073275 /* Pods-ReadingTracker.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ReadingTracker.debug.xcconfig"; path = "Target Support Files/Pods-ReadingTracker/Pods-ReadingTracker.debug.xcconfig"; sourceTree = "<group>"; };
+		3421A2BD2D92B3A600529B76 /* ReadingTrackerDebug.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = ReadingTrackerDebug.entitlements; path = ReadingTracker/ReadingTrackerDebug.entitlements; sourceTree = "<group>"; };
 		345F47172D917F4C00481BEC /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		5103B934A2434D24B17FF065 /* Rounded Mplus 1c Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rounded Mplus 1c Light.ttf"; path = "../assets/fonts/M_PLUS_Rounded_1c/Rounded Mplus 1c Light.ttf"; sourceTree = "<group>"; };
 		5D2F1EF16367A6DCFAE6B00F /* Pods_ReadingTracker.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ReadingTracker.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -58,6 +59,7 @@
 		13B07FAE1A68108700A75B9A /* ReadingTracker */ = {
 			isa = PBXGroup;
 			children = (
+				3421A2BD2D92B3A600529B76 /* ReadingTrackerDebug.entitlements */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				761780EC2CA45674006654EE /* AppDelegate.swift */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
@@ -313,7 +315,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = ReadingTracker/ReadingTrackerDebug.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 97T8286ZM6;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = ReadingTracker/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
@@ -441,10 +445,7 @@
 					"-DFOLLY_CFG_NO_COROUTINES=1",
 					"-DFOLLY_HAVE_CLOCK_GETTIME=1",
 				);
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					" ",
-				);
+				OTHER_LDFLAGS = "$(inherited)  ";
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) DEBUG";
@@ -524,10 +525,7 @@
 					"-DFOLLY_CFG_NO_COROUTINES=1",
 					"-DFOLLY_HAVE_CLOCK_GETTIME=1",
 				);
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					" ",
-				);
+				OTHER_LDFLAGS = "$(inherited)  ";
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				USE_HERMES = true;

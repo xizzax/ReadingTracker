@@ -7,6 +7,7 @@ import {Colors} from '../constants/Colors';
 import { globalStyleNumerics } from '../constants/StyleNumerics';
 import SearchBookScreen from '../screens/home/SearchBookScreen';
 import { NavigationContainer } from '@react-navigation/native';
+import UserProfileScreen from '../screens/home/UserProfile';
 
 //nested navigator for home stack
 
@@ -16,7 +17,8 @@ export default function HomeStackNavigator() {
   return (
     <NavigationContainer>
       <homeStack.Navigator
-        initialRouteName="Home"
+        // initialRouteName="Home"
+        initialRouteName='User Profile'
         screenOptions={{
           headerShown: false,
           contentStyle: {backgroundColor: 'white'},
@@ -24,6 +26,7 @@ export default function HomeStackNavigator() {
         <homeStack.Screen name="Home" component={HomeScreen} />
         <homeStack.Screen name="Stopwatch" component={StopwatchScreen} />
         <homeStack.Screen name="Search Book" component={SearchBookScreen} />
+      <homeStack.Screen name="User Profile" component={UserProfileScreen} />
       </homeStack.Navigator>
     </NavigationContainer>
   );

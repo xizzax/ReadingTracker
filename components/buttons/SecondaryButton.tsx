@@ -17,7 +17,7 @@ export default function SecondaryButton(props: SecondaryBtnProps) {
       <View style={{
          ...secondaryButtonStyles.background,
                   height: props.height ?? 60,
-                  width: props.width ?? screenDimensions.width * 0.85,
+                  width: props.width ?? screenDimensions.width * 0.9,
       }}>
         <Text style={{...secondaryButtonStyles.text, fontSize: props.fontSize ?? 20}}>{props.title}</Text>
       </View>

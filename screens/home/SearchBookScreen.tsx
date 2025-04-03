@@ -36,7 +36,7 @@ export default function SearchBookScreen() {
     <SafeAreaView style={addBookScreenStyles.screen}>
       <View style={addBookScreenStyles.searchHeader}>
         <View style={addBookScreenStyles.searchBar}>
-          <TextInput
+          <TextInput //TODO: change to text input component
             placeholder="Search books"
             value={searchQuery}
             onChangeText={setSearchQuery}
