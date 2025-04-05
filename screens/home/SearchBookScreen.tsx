@@ -14,7 +14,7 @@ import {globalStyleNumerics} from '../../constants/StyleNumerics';
 import Icon from 'react-native-vector-icons/Ionicons'; //no error
 import {globalTextStyles} from '../../styles/TextStyles';
 import {useState} from 'react';
-import PrimaryButton from '../../components/buttons/PrimaryButton';
+import Button from '../../components/buttons/Button';
 import {screenDimensions} from '../../constants/ScreenDimensions';
 import BookTile from '../../components/BookTile';
 
@@ -43,7 +43,7 @@ export default function SearchBookScreen() {
             onSubmitEditing={() => handleSubmit(searchQuery)}
             style={addBookScreenStyles.textInput}
           />
-          <PrimaryButton
+          <Button
             onPressFtn={() => handleSubmit(searchQuery)}
             title="Search"
             height={36}

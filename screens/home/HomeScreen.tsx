@@ -20,7 +20,7 @@ import {Colors} from '../../constants/Colors';
 import GoalProgressIndicator from '../../components/GoalProgressIndicator';
 import Icon from 'react-native-vector-icons/Ionicons'; //no error
 import Divider from '../../components/Divider';
-import PrimaryButton from '../../components/buttons/PrimaryButton';
+import Button from '../../components/buttons/Button';
 import ReadingNowBook from '../../components/ReadingNowBook';
 import {globalStyleNumerics} from '../../constants/StyleNumerics';
 import {signout} from '../../firebase/firebase_auth/SignOut';
@@ -153,7 +153,7 @@ export default function HomeScreen({navigation}: any) {
             }}>
             Reading Now
           </Text>
-          <PrimaryButton
+          <Button
             title="+ Book"
             onPressFtn={() => navigation.navigate('Search Book')}
           />

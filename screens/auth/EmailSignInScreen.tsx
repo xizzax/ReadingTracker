@@ -1,6 +1,5 @@
 import {SafeAreaView, View, Text, StyleSheet, TextInput} from 'react-native';
-import PrimaryButton from '../../components/buttons/PrimaryButton';
-import SecondaryButton from '../../components/buttons/SecondaryButton';
+import Button from '../../components/buttons/Button';
 import {googleauth} from '../../firebase/firebase_auth/google/GoogleSignIn';
 import {Colors} from '../../constants/Colors';
 import {globalTextStyles} from '../../styles/TextStyles';
@@ -58,7 +57,7 @@ export default function EmailSignInScreen() {
         /> */}
       </View>
       <View>
-        <PrimaryButton title="Sign In" onPressFtn={() => {
+        <Button title="Sign In" onPressFtn={() => {
           //TODO: email sign in
         }} />
       </View>

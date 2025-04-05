@@ -1,6 +1,5 @@
 import {View, Text, SafeAreaView, StyleSheet, Image} from 'react-native';
-import PrimaryButton from '../../components/buttons/PrimaryButton';
-import SecondaryButton from '../../components/buttons/SecondaryButton';
+import Button from '../../components/buttons/Button';
 import { screenDimensions } from '../../constants/ScreenDimensions';
 
 
@@ -23,7 +22,7 @@ export default function WelcomeScreen({navigation}:any) {
 
         <View style={welcomeScreenStyles.buttonContainer}>
           <View style={{marginBottom: 10}}>
-            <PrimaryButton title='Start Reading' onPressFtn={()=>{
+            <Button title='Start Reading' onPressFtn={()=>{
               console.log("Start Reading Button Pressed"); //TODO: functionality to go to next screen
               navigation.navigate('SignIn');
             }}/>

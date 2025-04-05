@@ -1,19 +1,26 @@
 import {useState} from 'react';
-import {View, Text, SafeAreaView, ActivityIndicator, Alert, Modal} from 'react-native';
-import PrimaryButton from '../../components/buttons/PrimaryButton';
+import {
+  View,
+  Text,
+  SafeAreaView,
+  ActivityIndicator,
+  Alert,
+  Modal,
+} from 'react-native';
+import Button from '../../components/buttons/Button';
 import TextInputField from '../../components/TextInputField';
 import {globalTextStyles} from '../../styles/TextStyles';
 import {StyleSheet} from 'react-native';
-import SecondaryButton from '../../components/buttons/SecondaryButton';
 import {googleauth} from '../../firebase/firebase_auth/google/GoogleSignIn';
 import {Colors} from '../../constants/Colors';
-import { emailsignup } from '../../firebase/firebase_auth/email/EmailSignUp';
+import {emailsignup} from '../../firebase/firebase_auth/email/EmailSignUp';
 
 export default function EmailSignUpScreen({navigation}: any) {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
 
-  const [loading, setLoading] = useState(false);
+  const [loadingGoogle, setLoadingGoogle] = useState(false);
+  const [loadingEmail, setLoadingEmail] = useState(false);
 
   //TODO: get input values
   return (
@@ -22,15 +29,19 @@ export default function EmailSignUpScreen({navigation}: any) {
         <Text style={{...globalTextStyles.headerText}}>Sign Up</Text>
       </View>
       <View style={signInScreenStyles.googleBtnView}>
-        <PrimaryButton title="Sign Up with Google" onPressFtn={()=>{
-          setLoading(true);
-          googleauth().finally(() => {
-            setLoading(false); //TODO: add set loading to sign in screen too
+        <Button
+          title="Sign Up with Google"
+          isLoading={loadingGoogle}
+          onPressFtn={() => {
+            setLoadingGoogle(true);
+            googleauth().finally(() => {
+              setLoadingGoogle(false); //TODO: add set loading to sign in screen too
             });
-        }} />
+          }}
+        />
       </View>
 
-      <Modal
+      {/* <Modal
           animationType='fade'
           transparent={true}
           visible={loading}
@@ -57,7 +68,7 @@ export default function EmailSignUpScreen({navigation}: any) {
                     <ActivityIndicator size="large" color={Colors.primary} />
                 </View>
             </View>
-          </Modal>
+          </Modal> */}
 
       {/* Divider */}
       <View
@@ -123,27 +134,20 @@ export default function EmailSignUpScreen({navigation}: any) {
           iconFtn={() => setConfirmPasswordVisible(!confirmPasswordVisible)}
         />
       </View>
-    <View>
-      
-
-      <SecondaryButton
-        title="Sign Up"
-        onPressFtn={() => {
-        //TODO: Add validation for email and password
-        setLoading(true);
-        emailsignup(
-            "mingyu",
-            "mingyu@svt.com",
-            "wonwoo",
-        ).finally(() => {
-            setLoading(false);
-        }
-        );
-       
-        }}
-        
-      />
-    </View>
+      <View>
+        <Button
+          title="Sign Up"
+          isSecondary={true}
+          isLoading={loadingEmail}
+          onPressFtn={() => {
+            //TODO: Add validation for email and password
+            setLoadingEmail(true);
+            emailsignup('mingyu', 'mingyu@svt.com', 'wonwoo').finally(() => {
+              setLoadingEmail(false);
+            });
+          }}
+        />
+      </View>
     </SafeAreaView>
   );
 }

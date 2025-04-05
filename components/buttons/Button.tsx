@@ -1,29 +1,43 @@
-import {View, Text, StyleSheet, Pressable} from 'react-native';
+import {View, Text, StyleSheet, Pressable, ActivityIndicator} from 'react-native';
 import {Colors} from '../../constants/Colors';
 import {screenDimensions} from '../../constants/ScreenDimensions';
 import {globalStyleNumerics} from '../../constants/StyleNumerics';
 
 interface primaryBtnProps {
+  //TODO: change to a single button (isprimary and isloading)
   title: string;
   onPressFtn: () => void;
+  isSecondary?: boolean;
   height?: number | null;
   width?: number | null;
   fontSize?: number | null;
+  isLoading?: boolean;
 }
 
-export default function PrimaryButton(props: primaryBtnProps) {
+export default function Button(props: primaryBtnProps) {
   return (
     <Pressable onPress={props.onPressFtn}>
       <View
         style={{
           ...primaryButtonStyles.background,
+          backgroundColor: props.isSecondary ? Colors.secondary : Colors.primary,
           height: props.height ?? 60,
           width: props.width ?? screenDimensions.width * 0.9,
         }}>
-        <Text
-          style={{...primaryButtonStyles.text, fontSize: props.fontSize ?? 20}}>
-          {props.title}
-        </Text>
+        {props.isLoading ? (
+          <ActivityIndicator size="large" color={
+            props.isSecondary ? Colors.black : Colors.white
+          } />
+        ) : (
+          <Text
+            style={{
+              ...primaryButtonStyles.text,
+              fontSize: props.fontSize ?? 20,
+              color: props.isSecondary ? Colors.black : Colors.white,
+            }}>
+            {props.title}
+          </Text>
+        )}
       </View>
     </Pressable>
   );
@@ -31,13 +45,11 @@ export default function PrimaryButton(props: primaryBtnProps) {
 
 const primaryButtonStyles = StyleSheet.create({
   background: {
-    backgroundColor: Colors.primary,
     borderRadius: globalStyleNumerics.borderRadius,
     justifyContent: 'center',
     alignItems: 'center',
   },
   text: {
-    color: Colors.white,
     fontWeight: '600',
   },
 });
