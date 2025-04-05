@@ -1,7 +1,7 @@
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import WelcomeScreen from '../screens/auth/WelcomeScreen';
 import SignInScreen from '../screens/auth/SignInScreen';
-import { NavigationContainer } from '@react-navigation/native';
+import {NavigationContainer} from '@react-navigation/native';
 import EmailSignInScreen from '../screens/auth/EmailSignInScreen';
 import SignUpScreen from '../screens/auth/SignUpScreen';
 
@@ -18,10 +18,19 @@ export default function AuthStackNavigator() {
         }}>
         <authStack.Screen name="Welcome" component={WelcomeScreen} />
         <authStack.Screen name="SignIn" component={SignInScreen} />
-        <authStack.Screen name="EmailSignIn" component={EmailSignInScreen} />
         <authStack.Screen
-          name="SignUp"  
+          name="EmailSignIn"
+          component={EmailSignInScreen}
+          options={{
+            presentation: 'modal',
+          }}
+        />
+        <authStack.Screen
+          name="SignUp"
           component={SignUpScreen}
+          options={{
+            presentation: 'modal',
+          }}
         />
       </authStack.Navigator>
     </NavigationContainer>

@@ -6,11 +6,7 @@ export async function emailsignup(
   password: string,
 ) {
   await auth()
-    .createUserWithEmailAndPassword(
-    //   email, password
-    "mingyu4@svt.com",
-    "wonwoooooo"
-    )
+    .createUserWithEmailAndPassword(email, password)
     .then(() => {
       console.log('User account created & signed in!');
     })

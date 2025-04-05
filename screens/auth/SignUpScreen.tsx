@@ -22,7 +22,45 @@ export default function EmailSignUpScreen({navigation}: any) {
   const [loadingGoogle, setLoadingGoogle] = useState(false);
   const [loadingEmail, setLoadingEmail] = useState(false);
 
-  //TODO: get input values
+  //inputs
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+
+  const handleSubmit = async () => {
+    if (!name || !email || !password || !confirmPassword) {
+      Alert.alert('Please fill in all fields!');
+      return;
+    }
+    if (password !== confirmPassword) {
+      Alert.alert('Passwords do not match!');
+      return;
+    }
+    setLoadingEmail(true);
+    emailsignup(name, email, password)
+      .catch(error => {
+        //TODO: check this catch thing again 
+        if (error.code === 'auth/email-already-in-use') {
+          Alert.alert('That email address is already in use!');
+          return;
+        }
+        if (error.code === 'auth/invalid-email') {
+          Alert.alert('That email address is invalid!');
+          return;
+        }
+        if (error.code === 'auth/weak-password') {
+          Alert.alert('Password must be at least 6 characters');
+          return;
+        }
+        console.error(error);
+      })
+      .finally(() => {
+        setLoadingEmail(false); //DONE: add set loading to sign in screen too
+      });
+  };
+
+  //DONE: get input values
   return (
     <SafeAreaView style={signInScreenStyles.container}>
       <View>
@@ -35,40 +73,11 @@ export default function EmailSignUpScreen({navigation}: any) {
           onPressFtn={() => {
             setLoadingGoogle(true);
             googleauth().finally(() => {
-              setLoadingGoogle(false); //TODO: add set loading to sign in screen too
+              setLoadingGoogle(false); //DONE: add set loading to sign in screen too
             });
           }}
         />
       </View>
-
-      {/* <Modal
-          animationType='fade'
-          transparent={true}
-          visible={loading}
-          onRequestClose={() => {
-            Alert.alert('Modal has been closed.');
-            setLoading(false);
-          }}>
-            <View
-                style={{
-                flex: 1,
-                justifyContent: 'center',
-                alignItems: 'center',
-                }}>
-                <View
-                    style={{
-                    width: 100,
-                    height: 100,
-                    backgroundColor: Colors.lightGray,
-                    borderRadius: 10,
-                    shadowColor: Colors.black,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    }}>
-                    <ActivityIndicator size="large" color={Colors.primary} />
-                </View>
-            </View>
-          </Modal> */}
 
       {/* Divider */}
       <View
@@ -105,6 +114,7 @@ export default function EmailSignUpScreen({navigation}: any) {
           clearButtonMode="while-editing"
           inputMode="text"
           enterKeyHint="next"
+          onChangeText={text => setName(text)}
         />
         <TextInputField
           placeholder="Email"
@@ -112,8 +122,8 @@ export default function EmailSignUpScreen({navigation}: any) {
           inputMode="email"
           keyboardType="email-address"
           enterKeyHint="next"
-          // iconName="mail-outline"
           multiline={false}
+          onChangeText={text => setEmail(text)}
         />
         <TextInputField
           placeholder="Password"
@@ -122,8 +132,7 @@ export default function EmailSignUpScreen({navigation}: any) {
           enterKeyHint="next"
           iconName={passwordVisible ? 'eye-off-outline' : 'eye-outline'}
           iconFtn={() => setPasswordVisible(!passwordVisible)}
-          multiline={false}
-          scrollEnabled={true}
+          onChangeText={text => setPassword(text)}
         />
         <TextInputField
           placeholder="Confirm Password"
@@ -132,6 +141,7 @@ export default function EmailSignUpScreen({navigation}: any) {
           enterKeyHint="done"
           iconName={confirmPasswordVisible ? 'eye-off-outline' : 'eye-outline'}
           iconFtn={() => setConfirmPasswordVisible(!confirmPasswordVisible)}
+          onChangeText={text => setConfirmPassword(text)}
         />
       </View>
       <View>
@@ -139,13 +149,7 @@ export default function EmailSignUpScreen({navigation}: any) {
           title="Sign Up"
           isSecondary={true}
           isLoading={loadingEmail}
-          onPressFtn={() => {
-            //TODO: Add validation for email and password
-            setLoadingEmail(true);
-            emailsignup('mingyu', 'mingyu@svt.com', 'wonwoo').finally(() => {
-              setLoadingEmail(false);
-            });
-          }}
+          onPressFtn={handleSubmit}
         />
       </View>
     </SafeAreaView>
