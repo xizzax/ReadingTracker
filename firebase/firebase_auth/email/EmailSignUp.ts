@@ -1,6 +1,6 @@
 import auth from '@react-native-firebase/auth';
 
-export async function emailsignup(
+export async function emailSignUp(
   name: string,
   email: string,
   password: string,

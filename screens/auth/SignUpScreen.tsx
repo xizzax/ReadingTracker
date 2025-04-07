@@ -11,9 +11,9 @@ import Button from '../../components/buttons/Button';
 import TextInputField from '../../components/TextInputField';
 import {globalTextStyles} from '../../styles/TextStyles';
 import {StyleSheet} from 'react-native';
-import {googleauth} from '../../firebase/firebase_auth/google/GoogleSignIn';
+import {googleAuth} from '../../firebase/firebase_auth/google/GoogleSignIn';
 import {Colors} from '../../constants/Colors';
-import {emailsignup} from '../../firebase/firebase_auth/email/EmailSignUp';
+import {emailSignUp} from '../../firebase/firebase_auth/email/EmailSignUp';
 
 export default function EmailSignUpScreen({navigation}: any) {
   const [passwordVisible, setPasswordVisible] = useState(false);
@@ -38,7 +38,7 @@ export default function EmailSignUpScreen({navigation}: any) {
       return;
     }
     setLoadingEmail(true);
-    emailsignup(name, email, password)
+    emailSignUp(name, email, password)
       .catch(error => {
         //TODO: check this catch thing again 
         if (error.code === 'auth/email-already-in-use') {
@@ -72,7 +72,7 @@ export default function EmailSignUpScreen({navigation}: any) {
           isLoading={loadingGoogle}
           onPressFtn={() => {
             setLoadingGoogle(true);
-            googleauth().finally(() => {
+            googleAuth().finally(() => {
               setLoadingGoogle(false); //DONE: add set loading to sign in screen too
             });
           }}
