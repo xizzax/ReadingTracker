@@ -4,7 +4,7 @@ import {Provider} from 'react-redux';
 import {store} from './state/Store';
 import AppNavigator from './stacks/AppNavigator';
 import {Text, View} from 'react-native';
-import HomeStackNavigator from './stacks/HomeStackNavigator';
+import HomeStackBottomTabNavigator from './stacks/HomeStackBottomTabNavigator';
 import AuthStackNavigator from './stacks/AuthStackNavigator';
 
 function App(): React.JSX.Element {
@@ -26,7 +26,7 @@ function App(): React.JSX.Element {
   //DONE: reduc toolkit add
   return (
     <Provider store={store}>
-      {user ? <HomeStackNavigator /> : <AuthStackNavigator />}
+      {user ? <HomeStackBottomTabNavigator /> : <AuthStackNavigator />}
     </Provider>
   );
 }
