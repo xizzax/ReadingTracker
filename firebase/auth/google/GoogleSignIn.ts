@@ -1,5 +1,6 @@
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import auth from '@react-native-firebase/auth';
+import { makeNewDocumentForUser } from '../../firestore/FirestoreFunctions';
 
 export async function googleAuth() {
   // Configure google sign in
@@ -29,5 +30,11 @@ export async function googleAuth() {
   );
 
   // Sign-in the user with the credential
-  return auth().signInWithCredential(googleCredential);
+  await auth().signInWithCredential(googleCredential);
+
+  await makeNewDocumentForUser(
+    auth().currentUser?.uid as string
+  );
+
+  return;
 }

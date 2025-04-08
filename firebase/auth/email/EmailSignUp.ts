@@ -1,4 +1,5 @@
 import auth from '@react-native-firebase/auth';
+import { makeNewDocumentForUser } from '../../firestore/FirestoreFunctions';
 
 export async function emailSignUp(
   name: string,
@@ -8,11 +9,10 @@ export async function emailSignUp(
   await auth()
     .createUserWithEmailAndPassword(email, password)
     .then(async () => {
-      console.log('User account created & signed in!');
       await auth().currentUser?.updateProfile({
         displayName: name
       });
-      console.log("user's name: "+auth().currentUser?.displayName);
+      await makeNewDocumentForUser(auth().currentUser?.uid as string);
     })
     .catch(error => {
       if (error.code === 'auth/email-already-in-use') {

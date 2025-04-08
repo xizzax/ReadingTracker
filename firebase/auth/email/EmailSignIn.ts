@@ -1,5 +1,4 @@
 import auth from '@react-native-firebase/auth';
-import { getAll } from '../../firestore/FirestoreFunctions';
 
 export async function emailSignIn(email: string, password: string) {
   await auth()
@@ -7,7 +6,7 @@ export async function emailSignIn(email: string, password: string) {
     .then(async () => {
       console.log('User account signed in!');
       console.log(auth().currentUser?.uid);
-      await getAll();
+      //TODO: fetch users document
     })
     .catch(error => {
       if (error.code === 'auth/wrong-password') {
