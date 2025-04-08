@@ -7,8 +7,12 @@ export async function emailSignUp(
 ) {
   await auth()
     .createUserWithEmailAndPassword(email, password)
-    .then(() => {
+    .then(async () => {
       console.log('User account created & signed in!');
+      await auth().currentUser?.updateProfile({
+        displayName: name
+      });
+      console.log("user's name: "+auth().currentUser?.displayName);
     })
     .catch(error => {
       if (error.code === 'auth/email-already-in-use') {

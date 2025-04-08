@@ -2,7 +2,7 @@ import {View, Text, StyleSheet, SafeAreaView, Pressable} from 'react-native';
 import Button from '../../components/buttons/Button';
 import {screenDimensions} from '../../constants/ScreenDimensions';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
-import {googleAuth} from '../../firebase/firebase_auth/google/GoogleSignIn';
+import {googleAuth} from '../../firebase/auth/google/GoogleSignIn';
 import {Colors} from '../../constants/Colors';
 import {globalTextStyles} from '../../styles/TextStyles';
 import {useState} from 'react';

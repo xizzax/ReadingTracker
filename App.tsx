@@ -24,7 +24,7 @@ function App(): React.JSX.Element {
   }, [user]);
 
   //DONE: reduc toolkit add
-  return (
+  return ( //TODO: add a splash screen
     <Provider store={store}>
       {user ? <HomeStackBottomTabNavigator /> : <AuthStackNavigator />}
     </Provider>

@@ -1,13 +1,13 @@
 import {SafeAreaView, View, Text, StyleSheet, TextInput} from 'react-native';
 import Button from '../../components/buttons/Button';
-import {googleAuth} from '../../firebase/firebase_auth/google/GoogleSignIn';
+import {googleAuth} from '../../firebase/auth/google/GoogleSignIn';
 import {Colors} from '../../constants/Colors';
 import {globalTextStyles} from '../../styles/TextStyles';
 import {screenDimensions} from '../../constants/ScreenDimensions';
 import {globalStyleNumerics} from '../../constants/StyleNumerics';
 import TextInputField from '../../components/TextInputField';
 import {useState} from 'react';
-import {emailSignIn} from '../../firebase/firebase_auth/email/EmailSignIn';
+import {emailSignIn} from '../../firebase/auth/email/EmailSignIn';
 
 export default function EmailSignInScreen() {
   const [passwordVisible, setPasswordVisible] = useState(false);
@@ -23,23 +23,9 @@ export default function EmailSignInScreen() {
       return;
     }
     setLoading(true);
-    await emailSignIn(email, password)
-      .then(() => {
-        setLoading(false);
-      })
-      .catch(error => {
-        setLoading(false);
-        if (error.code === 'auth/wrong-password') {
-          console.error('Wrong password');
-        } else if (error.code === 'auth/user-not-found') {
-          console.error('User not found');
-        } else if (error.code === 'auth/invalid-email') {
-          console.error('Invalid email');
-        } else {
-          console.error('something went wrong. try again');
-          console.error(error);
-        }
-      });
+    await emailSignIn(email, password).finally(() => {
+      setLoading(false);
+    });
   };
 
   return (
@@ -50,14 +36,6 @@ export default function EmailSignInScreen() {
         </Text>
       </View>
       <View>
-        {/* <TextInputField
-          placeholder="Name"
-          autoFocus={true}
-          clearButtonMode="while-editing"
-          inputMode="text"
-          enterKeyHint="next"
-          iconName="person-circle-outline"
-        /> */}
         <TextInputField
           placeholder="Email"
           clearButtonMode="while-editing"
@@ -79,14 +57,6 @@ export default function EmailSignInScreen() {
           scrollEnabled={true}
           onChangeText={text => setPassword(text)}
         />
-        {/* <TextInputField
-          placeholder="Confirm Password"
-          secureTextEntry={!confirmPasswordVisible}
-          inputMode="text"
-          enterKeyHint="done"
-          iconName={confirmPasswordVisible ? 'eye-off-outline' : 'eye-outline'}
-          iconFtn={() => setConfirmPasswordVisible(!confirmPasswordVisible)}
-        /> */}
       </View>
       <View>
         <Button

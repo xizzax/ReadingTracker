@@ -8,7 +8,6 @@ export async function googleAuth() {
       '448742658571-9j05dttdtt81u603k6gbic8icf2rq8et.apps.googleusercontent.com',
   });
 
-  console.log('google auth ftn starts here');
   // Check if your device supports Google Play
   await GoogleSignin.hasPlayServices({showPlayServicesUpdateDialog: true});
   // Get the users ID token

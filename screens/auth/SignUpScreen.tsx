@@ -11,9 +11,9 @@ import Button from '../../components/buttons/Button';
 import TextInputField from '../../components/TextInputField';
 import {globalTextStyles} from '../../styles/TextStyles';
 import {StyleSheet} from 'react-native';
-import {googleAuth} from '../../firebase/firebase_auth/google/GoogleSignIn';
+import {googleAuth} from '../../firebase/auth/google/GoogleSignIn';
 import {Colors} from '../../constants/Colors';
-import {emailSignUp} from '../../firebase/firebase_auth/email/EmailSignUp';
+import {emailSignUp} from '../../firebase/auth/email/EmailSignUp';
 
 export default function EmailSignUpScreen({navigation}: any) {
   const [passwordVisible, setPasswordVisible] = useState(false);

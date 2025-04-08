@@ -23,7 +23,7 @@ import Divider from '../../components/Divider';
 import Button from '../../components/buttons/Button';
 import ReadingNowBook from '../../components/ReadingNowBook';
 import {globalStyleNumerics} from '../../constants/StyleNumerics';
-import {signout} from '../../firebase/firebase_auth/SignOut';
+import {signout} from '../../firebase/auth/SignOut';
 
 if (Platform.OS === 'android') {
   if (UIManager.setLayoutAnimationEnabledExperimental) {

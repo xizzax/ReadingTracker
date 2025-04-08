@@ -3,7 +3,7 @@ import Icon from 'react-native-vector-icons/Ionicons'; //no error
 
 import { Colors } from "react-native/Libraries/NewAppScreen";
 import { globalStyleNumerics } from "../../constants/StyleNumerics";
-import { signout } from "../../firebase/firebase_auth/SignOut";
+import { signout } from "../../firebase/auth/SignOut";
 
 export default function UserProfileScreen() {
     return (

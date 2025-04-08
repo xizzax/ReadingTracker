@@ -23,7 +23,7 @@ export default function WelcomeScreen({navigation}:any) {
         <View style={welcomeScreenStyles.buttonContainer}>
           <View style={{marginBottom: 10}}>
             <Button title='Start Reading' onPressFtn={()=>{
-              console.log("Start Reading Button Pressed"); //TODO: functionality to go to next screen
+              // console.log("Start Reading Button Pressed"); //TODO: functionality to go to next screen
               navigation.navigate('SignIn');
             }}/>
           </View>
