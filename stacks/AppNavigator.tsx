@@ -4,6 +4,7 @@ import WelcomeScreen from '../screens/auth/WelcomeScreen';
 import HomeScreen from '../screens/home/HomeScreen';
 import HomeStackBottomTabNavigator from './HomeStackBottomTabNavigator';
 import AuthStackNavigator from './AuthStackNavigator';
+import HomeStackNavigator from './HomeStackNavigator';
 
 const stack = createNativeStackNavigator();
 //TODO: get rid of this
@@ -12,7 +13,7 @@ type AppNavigatorProps = {
   stack: 'auth' | 'home';
 };
 
-export default function AppNavigator(props: AppNavigatorProps) {
+export default function AppNavigator(props: AppNavigatorProps) { //IM NOT USING THIS ONE JUST YET
   return (
     <NavigationContainer>
       <stack.Navigator
@@ -23,7 +24,7 @@ export default function AppNavigator(props: AppNavigatorProps) {
         initialRouteName={props.stack === 'auth' ? 'AuthStack' : 'HomeStack'}>
         <stack.Screen name="AuthStack" component={AuthStackNavigator} />
         {/*DONE: make auth stack and add here*/}
-        <stack.Screen name="HomeStack" component={HomeStackBottomTabNavigator} />
+        <stack.Screen name="HomeStack" component={HomeStackNavigator} />
       </stack.Navigator>
     </NavigationContainer>
   );

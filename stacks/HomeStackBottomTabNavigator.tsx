@@ -19,7 +19,7 @@ const homeStackTab = createBottomTabNavigator();
 
 export default function HomeStackBottomTabNavigator() {
   return (
-    <NavigationContainer>
+ 
       <homeStackTab.Navigator
         screenOptions={({route}) => ({
           headerShown: false,
@@ -104,6 +104,6 @@ export default function HomeStackBottomTabNavigator() {
         <homeStackTab.Screen name="Stats" component={StatsScreen} />
         <homeStackTab.Screen name="User" component={UserProfileScreen} />
       </homeStackTab.Navigator>
-    </NavigationContainer>
+  
   );
 }

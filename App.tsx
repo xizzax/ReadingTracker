@@ -6,6 +6,7 @@ import AppNavigator from './stacks/AppNavigator';
 import {Text, View} from 'react-native';
 import HomeStackBottomTabNavigator from './stacks/HomeStackBottomTabNavigator';
 import AuthStackNavigator from './stacks/AuthStackNavigator';
+import HomeStackNavigator from './stacks/HomeStackNavigator';
 
 function App(): React.JSX.Element {
   // const [initializing, setInitializing] = useState(true);
@@ -26,7 +27,7 @@ function App(): React.JSX.Element {
   //DONE: reduc toolkit add
   return ( //TODO: add a splash screen
     <Provider store={store}>
-      {user ? <HomeStackBottomTabNavigator /> : <AuthStackNavigator />}
+      {user ? <HomeStackNavigator /> : <AuthStackNavigator />}
     </Provider>
   );
 }
