@@ -9,10 +9,10 @@ import MaskedView from '@react-native-masked-view/masked-view';
 import {useRef} from 'react';
 import {signout} from '../../firebase/auth/SignOut';
 import { useDispatch } from 'react-redux';
-import { setGoal } from '../../state/slices/user_data/UserDataSlice';
+import { setGoal} from '../../state/slices/user_data/UserDataSlice';
 import { HHMMSSToTotalSeconds } from '../../helper/HHMMSSToTotalSeconds';
 
-export default function SetGoalScreen({navigation}) {
+export default function SetGoalScreen({navigation}:any) {
   const timerPickerRef = useRef<TimerPickerRef>(null);
 
   const dispatch = useDispatch();

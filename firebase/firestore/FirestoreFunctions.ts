@@ -43,3 +43,9 @@ export async function setGoalFirestore(
     
   });
 }
+
+export async function fetchUserDataFirestore(userId: string,){
+  const userData = await firestore().collection('user_data').doc(userId).get();
+  console.log(userData.data());
+  return userData.data();
+}

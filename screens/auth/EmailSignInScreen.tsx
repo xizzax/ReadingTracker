@@ -1,15 +1,18 @@
-import {SafeAreaView, View, Text, StyleSheet, TextInput} from 'react-native';
+import {SafeAreaView, View, Text, StyleSheet} from 'react-native';
 import Button from '../../components/buttons/Button';
-import {googleAuth} from '../../firebase/auth/google/GoogleSignIn';
-import {Colors} from '../../constants/Colors';
 import {globalTextStyles} from '../../styles/TextStyles';
-import {screenDimensions} from '../../constants/ScreenDimensions';
-import {globalStyleNumerics} from '../../constants/StyleNumerics';
 import TextInputField from '../../components/TextInputField';
 import {useState} from 'react';
 import {emailSignIn} from '../../firebase/auth/email/EmailSignIn';
+import { useDispatch } from 'react-redux';
+import { setUserData, setUserId } from '../../state/slices/user_data/UserDataSlice';
+import auth from '@react-native-firebase/auth';
+import { fetchUserDataFirestore } from '../../firebase/firestore/FirestoreFunctions';
 
-export default function EmailSignInScreen() {
+
+export default function EmailSignInScreen({navigation}: any) {
+  const dispatch = useDispatch();
+
   const [passwordVisible, setPasswordVisible] = useState(false);
 
   const [loading, setLoading] = useState(false);
@@ -23,7 +26,15 @@ export default function EmailSignInScreen() {
       return;
     }
     setLoading(true);
-    await emailSignIn(email, password).finally(() => {
+    await emailSignIn(email, password)
+    .then(async()=>{
+      const userid = auth().currentUser?.uid;
+      dispatch(setUserId(userid));
+      const userData = await fetchUserDataFirestore(userid!);
+      dispatch(setUserData(userData));
+      navigation.replace("HomeStack");
+    })
+    .finally(() => {
       setLoading(false);
     });
   };
