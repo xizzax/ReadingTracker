@@ -13,7 +13,5 @@ export const fetchUserData = createAsyncThunk( //TODO: move to FirestoreFunction
             console.log(e);
             return thunkAPI.rejectWithValue(e);
         }
-        
-        
     }
 );

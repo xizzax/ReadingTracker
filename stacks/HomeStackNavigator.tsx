@@ -9,18 +9,19 @@ const homeStackNavigator = createStackNavigator();
 
 export default function HomeStackNavigator() {
   return (
-    <NavigationContainer>
+    // <NavigationContainer>
       <homeStackNavigator.Navigator
+      initialRouteName='HomeStackBottomTabNavigator'
         screenOptions={{
           headerShown: false,
           cardStyle: {backgroundColor: 'white'},
         }}>
-        {/* <homeStackNavigator.Screen name="SetGoal" component={SetGoalScreen} /> */}
+        <homeStackNavigator.Screen name="SetGoal" component={SetGoalScreen} />
         <homeStackNavigator.Screen
           name="HomeStackBottomTabNavigator"
           component={HomeStackBottomTabNavigator}
         />
       </homeStackNavigator.Navigator>
-    </NavigationContainer>
+    // </NavigationContainer>
   );
 }

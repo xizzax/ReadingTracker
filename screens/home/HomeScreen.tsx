@@ -53,9 +53,11 @@ export default function HomeScreen({navigation}: any) {
 
         <View style={homeScreenStyles.topHeader}>
           <Pressable
-            onPress={() => {
+            onPress={async () => {
               console.log('logout goes here');
-              signout();
+              await signout().then(()=>{
+                  navigation.replace("AuthStack")
+              });
             }}>
             <View style={homeScreenStyles.calendarButton}>
               <Icon

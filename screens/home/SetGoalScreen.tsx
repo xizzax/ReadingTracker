@@ -66,12 +66,6 @@ export default function SetGoalScreen({navigation}) {
           title="Set Goal"
           onPressFtn={() => {
             const latestDuration = timerPickerRef.current?.latestDuration;
-            // const newDuration = {
-            //   hours: latestDuration?.hours?.current,
-            //   minutes: latestDuration?.minutes?.current,
-            //   seconds: latestDuration?.seconds?.current,
-            // };
-
             const goalTime = HHMMSSToTotalSeconds(
               latestDuration?.hours?.current!,
               latestDuration?.minutes?.current!,
@@ -87,7 +81,7 @@ export default function SetGoalScreen({navigation}) {
               }
             ));
 
-            navigation.navigate("HomeStackBottomTabNavigator");
+            navigation.replace("HomeStackBottomTabNavigator");
           }}
         />
       </View>

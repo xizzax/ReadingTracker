@@ -6,6 +6,7 @@ import HomeStackNavigator from './stacks/HomeStackNavigator';
 import {reset, setUserId} from './state/slices/user_data/UserDataSlice';
 import {fetchUserData} from './state/slices/user_data/thunks/FetchUserData';
 import SetGoalScreen from './screens/home/SetGoalScreen';
+import AppNavigator from './stacks/AppNavigator';
 
 function App(): React.JSX.Element {
   const [user, setUser] = useState(null);
@@ -18,10 +19,10 @@ function App(): React.JSX.Element {
 
   function onAuthStateChanged(user) {
     setUser(user);
-    console.log(user._user.uid);
+    // console.log(user._user.uid);
     if (user) {
-      dispatch(setUserId(user._user.uid));
-      dispatch(fetchUserData(user._user.uid));
+      dispatch(setUserId(user.uid));
+      // dispatch(fetchUserData(user._user.uid));
     } else {
       dispatch(reset());
     }
@@ -34,7 +35,8 @@ function App(): React.JSX.Element {
     return subscriber;
   }, [user]);
 
-  return <>{user ? <HomeStackNavigator /> : <AuthStackNavigator />}</>;
+  // return <>{user ? <HomeStackNavigator /> : <AuthStackNavigator />}</>;
+  return <AppNavigator />;
 }
 
 export default App;

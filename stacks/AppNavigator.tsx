@@ -7,23 +7,16 @@ import AuthStackNavigator from './AuthStackNavigator';
 import HomeStackNavigator from './HomeStackNavigator';
 
 const stack = createNativeStackNavigator();
-//TODO: get rid of this
 
-type AppNavigatorProps = {
-  stack: 'auth' | 'home';
-};
-
-export default function AppNavigator(props: AppNavigatorProps) { //IM NOT USING THIS ONE JUST YET
+export default function AppNavigator() {
   return (
     <NavigationContainer>
       <stack.Navigator
         screenOptions={{
           headerShown: false,
-          contentStyle: {backgroundColor: 'white'}, // setting app background to be white
-        }}
-        initialRouteName={props.stack === 'auth' ? 'AuthStack' : 'HomeStack'}>
+          contentStyle: {backgroundColor: 'white'}, 
+        }}>
         <stack.Screen name="AuthStack" component={AuthStackNavigator} />
-        {/*DONE: make auth stack and add here*/}
         <stack.Screen name="HomeStack" component={HomeStackNavigator} />
       </stack.Navigator>
     </NavigationContainer>

@@ -19,6 +19,7 @@ export default function EmailSignUpScreen({navigation}: any) {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
 
+  //loading indicators
   const [loadingGoogle, setLoadingGoogle] = useState(false);
   const [loadingEmail, setLoadingEmail] = useState(false);
 
@@ -37,30 +38,18 @@ export default function EmailSignUpScreen({navigation}: any) {
       Alert.alert('Passwords do not match!');
       return;
     }
+
     setLoadingEmail(true);
-    emailSignUp(name, email, password)
-      .catch(error => {
-        //TODO: check this catch thing again 
-        if (error.code === 'auth/email-already-in-use') {
-          Alert.alert('That email address is already in use!');
-          return;
-        }
-        if (error.code === 'auth/invalid-email') {
-          Alert.alert('That email address is invalid!');
-          return;
-        }
-        if (error.code === 'auth/weak-password') {
-          Alert.alert('Password must be at least 6 characters');
-          return;
-        }
-        console.error(error);
+
+    await emailSignUp(name, email, password)
+      .then(() => {
+        navigation.navigate('HomeStack', {screen: 'SetGoal'});
       })
       .finally(() => {
-        setLoadingEmail(false); //DONE: add set loading to sign in screen too
+        setLoadingEmail(false);
       });
   };
 
-  //DONE: get input values
   return (
     <SafeAreaView style={signInScreenStyles.container}>
       <View>
@@ -73,7 +62,7 @@ export default function EmailSignUpScreen({navigation}: any) {
           onPressFtn={() => {
             setLoadingGoogle(true);
             googleAuth().finally(() => {
-              setLoadingGoogle(false); //DONE: add set loading to sign in screen too
+              setLoadingGoogle(false);
             });
           }}
         />

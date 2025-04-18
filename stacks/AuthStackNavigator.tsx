@@ -9,7 +9,7 @@ const authStack = createNativeStackNavigator();
 
 export default function AuthStackNavigator() {
   return (
-    <NavigationContainer>
+    // <NavigationContainer>
       <authStack.Navigator
         initialRouteName="Welcome"
         screenOptions={{
@@ -22,17 +22,25 @@ export default function AuthStackNavigator() {
           name="EmailSignIn"
           component={EmailSignInScreen}
           options={{
-            presentation: 'modal',
+            headerShown: true,
+            headerTitle: '',
+            headerShadowVisible: false,
+            headerBackButtonDisplayMode: 'minimal',
+            headerTintColor: 'black',
           }}
         />
         <authStack.Screen
           name="SignUp"
           component={SignUpScreen}
           options={{
-            presentation: 'modal',
+            headerShown: true,
+            headerTitle: '',
+            headerShadowVisible: false,
+            headerBackButtonDisplayMode: 'minimal',
+            headerTintColor: 'black',
           }}
         />
       </authStack.Navigator>
-    </NavigationContainer>
+    // </NavigationContainer>
   );
 }
