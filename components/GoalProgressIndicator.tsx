@@ -20,6 +20,7 @@ export default function GoalProgressIndicator(
     (elapsedTimeSeconds / goalTimeSeconds) * 100,
   );
 
+  //TODO: see if it can be replaced with helper
   //elapsed time minutes and hours
   const elapsedTimeMinutes = Math.floor(elapsedTimeSeconds / 60);
   const elapsedTimeHours = Math.floor(elapsedTimeMinutes / 60);
@@ -60,7 +61,7 @@ export default function GoalProgressIndicator(
                 ...globalTextStyles.bodyText,
                 ...goalProgressIndicatorStyles.goalText,
               }}>
-              of your{' '}
+              of your
               {goalTimeHours > 0 || goalTimeMinutesLeft > 0
                 ? `${goalTimeHours > 0 ? `${goalTimeHours} hour` : ''}${
                     goalTimeHours > 0 && goalTimeMinutesLeft > 0 ? ' ' : ''
@@ -69,7 +70,7 @@ export default function GoalProgressIndicator(
                       ? `${goalTimeMinutesLeft} minute`
                       : ''
                   }`
-                : '0 hour 0 minute'}{' '}
+                : '0 hour 0 minute'}
               goal
             </Text>
           </View>

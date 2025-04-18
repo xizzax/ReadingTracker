@@ -1,20 +1,30 @@
 import React, {useEffect, useState} from 'react';
 import auth from '@react-native-firebase/auth';
-import {Provider} from 'react-redux';
-import {store} from './state/Store';
-import AppNavigator from './stacks/AppNavigator';
-import {Text, View} from 'react-native';
-import HomeStackBottomTabNavigator from './stacks/HomeStackBottomTabNavigator';
+import {useDispatch, useSelector} from 'react-redux';
 import AuthStackNavigator from './stacks/AuthStackNavigator';
 import HomeStackNavigator from './stacks/HomeStackNavigator';
+import {reset, setUserId} from './state/slices/user_data/UserDataSlice';
+import {fetchUserData} from './state/slices/user_data/thunks/FetchUserData';
+import SetGoalScreen from './screens/home/SetGoalScreen';
 
 function App(): React.JSX.Element {
-  // const [initializing, setInitializing] = useState(true);
   const [user, setUser] = useState(null);
+  const [dataFetched, setDataFetched] = useState(false);
+
+  const goal = useSelector((state: any) => state.userDataState.goal);
+  const isGoalSet = goal.goalSet;
+
+  const dispatch = useDispatch();
 
   function onAuthStateChanged(user) {
     setUser(user);
-    // if (initializing) setInitializing(false);
+    console.log(user._user.uid);
+    if (user) {
+      dispatch(setUserId(user._user.uid));
+      dispatch(fetchUserData(user._user.uid));
+    } else {
+      dispatch(reset());
+    }
   }
 
   useEffect(() => {
@@ -24,12 +34,7 @@ function App(): React.JSX.Element {
     return subscriber;
   }, [user]);
 
-  //DONE: reduc toolkit add
-  return ( //TODO: add a splash screen
-    <Provider store={store}>
-      {user ? <HomeStackNavigator /> : <AuthStackNavigator />}
-    </Provider>
-  );
+  return <>{user ? <HomeStackNavigator /> : <AuthStackNavigator />}</>;
 }
 
 export default App;

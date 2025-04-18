@@ -3,8 +3,7 @@ import {Colors} from '../../constants/Colors';
 import {screenDimensions} from '../../constants/ScreenDimensions';
 import {globalStyleNumerics} from '../../constants/StyleNumerics';
 
-interface primaryBtnProps {
-  //TODO: change to a single button (isprimary and isloading)
+interface btnProps {
   title: string;
   onPressFtn: () => void;
   isSecondary?: boolean;
@@ -14,7 +13,7 @@ interface primaryBtnProps {
   isLoading?: boolean;
 }
 
-export default function Button(props: primaryBtnProps) {
+export default function Button(props: btnProps) {
   return (
     <Pressable onPress={props.onPressFtn}>
       <View

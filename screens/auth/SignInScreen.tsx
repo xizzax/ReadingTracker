@@ -6,6 +6,7 @@ import {googleAuth} from '../../firebase/auth/google/GoogleSignIn';
 import {Colors} from '../../constants/Colors';
 import {globalTextStyles} from '../../styles/TextStyles';
 import {useState} from 'react';
+import TextButton from '../../components/buttons/TextButton';
 
 //TODO: android googlre sign in setup (from google sign in library)
 //TODO: multiple auth methods for one firebase user
@@ -41,20 +42,15 @@ export default function SignInScreen({navigation}: any) {
           style={{
             ...globalTextStyles.bodyText,
           }}>
-          Don't have an account?{' '}
+          Don't have an account?
         </Text>
-        <Pressable
-          onPress={() => {
+        <TextButton
+          title="Sign Up"
+          onPressFtn={() => {
             navigation.navigate('SignUp');
-          }}>
-          <Text
-            style={{
-              ...globalTextStyles.bodyText,
-              ...signInScreenStyles.signUpBtn,
-            }}>
-            Sign Up
-          </Text>
-        </Pressable>
+          }}
+        />
+
       </View>
     </SafeAreaView>
   );
@@ -75,8 +71,5 @@ const signInScreenStyles = StyleSheet.create({
     justifyContent: 'space-between',
     marginTop: 24,
   },
-  signUpBtn: {
-    color: Colors.primary,
-    textDecorationLine: 'underline',
-  },
+  
 });

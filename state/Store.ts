@@ -3,9 +3,11 @@ import  { configureStore } from '@reduxjs/toolkit';
 import timerStateReducer from './slices/TimerStateSlice';
 import elapsedTimeReducer from './slices/TimeElapsedSlice';
 import { apiSlice } from './slices/ApiSlice';
+import userDataReducer from './slices/user_data/UserDataSlice';
 
 export const store = configureStore({
     reducer: {
+        userDataState: userDataReducer,
         timerState: timerStateReducer,
         elapsedTimeState: elapsedTimeReducer,
 

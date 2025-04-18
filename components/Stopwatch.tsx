@@ -19,7 +19,6 @@ export default function Stopwatch() {
           ...globalTextStyles.headerText,
           ...stopwatchStyles.timeText,
         }}>
-        {' '}
         {hoursElapsed.toString().padStart(2, '0')}:
         {minutesElapsed.toString().padStart(2, '0')}:
         {secondsElapsed.toString().padStart(2, '0')}
