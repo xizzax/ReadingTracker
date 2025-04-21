@@ -1,9 +1,42 @@
 import {View, Text, SafeAreaView, StyleSheet, Image} from 'react-native';
 import Button from '../../components/buttons/Button';
+import React, {useEffect, useState, useRef} from 'react';
+import auth from '@react-native-firebase/auth';
 import { screenDimensions } from '../../constants/ScreenDimensions';
+import { useDispatch } from 'react-redux';
+import { setUserData, setUserId } from '../../state/slices/user_data/UserDataSlice';
+import { fetchUserDataFirestore } from '../../firebase/firestore/FirestoreFunctions';
+
 
 
 export default function WelcomeScreen({navigation}:any) {
+
+  //TODO: move this logic to splash screen
+  const [user, setUser] = useState(null);
+  const listener = useRef(() => {});
+  const dispatch = useDispatch();
+
+  async function onAuthStateChanged(user) {
+    listener.current(); // getting rid of listener after one call
+    setUser(user);
+    if(user){
+      console.log("currently logged in : ", user.uid);
+      dispatch(setUserId(user.uid));
+    const userData = await fetchUserDataFirestore(user.uid);
+     dispatch(setUserData(userData));
+      navigation.replace('HomeStack');
+
+    }
+  }
+  // auth listener
+  useEffect(() => {
+    listener.current = auth().onAuthStateChanged(onAuthStateChanged);
+    return listener.current;
+  }, []);
+
+  
+
+
   return (
     <SafeAreaView style={{flex: 1}}>
       <View style={welcomeScreenStyles.screen}>

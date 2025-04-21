@@ -24,6 +24,8 @@ import Button from '../../components/buttons/Button';
 import ReadingNowBook from '../../components/ReadingNowBook';
 import {globalStyleNumerics} from '../../constants/StyleNumerics';
 import {signout} from '../../firebase/auth/SignOut';
+import {useDispatch} from 'react-redux';
+import {reset} from '../../state/slices/user_data/UserDataSlice';
 
 if (Platform.OS === 'android') {
   if (UIManager.setLayoutAnimationEnabledExperimental) {
@@ -32,6 +34,8 @@ if (Platform.OS === 'android') {
 }
 
 export default function HomeScreen({navigation}: any) {
+  const dispatch = useDispatch();
+
   // CALENDAR
   const [calendarVisible, setCalendarVisible] = useState(false);
   const toggleVisibility = () => {
@@ -55,8 +59,12 @@ export default function HomeScreen({navigation}: any) {
           <Pressable
             onPress={async () => {
               console.log('logout goes here');
-              await signout().then(()=>{
-                  navigation.replace("AuthStack")
+              await signout().then(() => {
+                dispatch(reset());
+                //timeout for half second to let state reset
+                setTimeout(() => {
+                  navigation.replace('AuthStack');
+                }, 500);
               });
             }}>
             <View style={homeScreenStyles.calendarButton}>

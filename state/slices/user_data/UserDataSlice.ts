@@ -18,7 +18,6 @@ export const userDataSlice = createSlice({
             ////for setting data gotten from firebase////
             state.goal.goalSet = action.payload.goal.goal_set;
             state.goal.currentGoal = action.payload.goal.time_in_seconds;
-            console.log( "action payload goal set", action.payload.goal_set);
         },
         setUserId: (state, action) => {
             state.userId = action.payload;

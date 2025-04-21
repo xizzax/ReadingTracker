@@ -1,26 +1,27 @@
-import {NavigationContainer, useNavigation} from '@react-navigation/native';
+import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import WelcomeScreen from '../screens/auth/WelcomeScreen';
-import HomeScreen from '../screens/home/HomeScreen';
-import HomeStackBottomTabNavigator from './HomeStackBottomTabNavigator';
 import AuthStackNavigator from './AuthStackNavigator';
 import HomeStackNavigator from './HomeStackNavigator';
-import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 
-const stack = createNativeStackNavigator();
+const appStack = createNativeStackNavigator();
+
+
+
 export default function AppNavigator() {
+
 
   return (
     <NavigationContainer>
-      <stack.Navigator
+      <appStack.Navigator
+        initialRouteName="AuthStack"
         screenOptions={{
           headerShown: false,
-          contentStyle: {backgroundColor: 'white'}, 
+          contentStyle: {backgroundColor: 'white'},
         }}>
-        <stack.Screen name="AuthStack" component={AuthStackNavigator} />
-        <stack.Screen name="HomeStack" component={HomeStackNavigator} />
-      </stack.Navigator>
+        <appStack.Screen name="AuthStack" component={AuthStackNavigator} />
+        <appStack.Screen name="HomeStack" component={HomeStackNavigator} />
+      </appStack.Navigator>
     </NavigationContainer>
   );
 }
