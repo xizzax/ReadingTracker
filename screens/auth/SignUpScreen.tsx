@@ -14,8 +14,16 @@ import {StyleSheet} from 'react-native';
 import {googleAuth} from '../../firebase/auth/google/GoogleSignIn';
 import {Colors} from '../../constants/Colors';
 import {emailSignUp} from '../../firebase/auth/email/EmailSignUp';
+import { useDispatch } from 'react-redux';
+import { setUserData, setUserId } from '../../state/slices/user_data/UserDataSlice';
+import { fetchUserDataFirestore } from '../../firebase/firestore/FirestoreFunctions';
+import auth from '@react-native-firebase/auth';
+
 
 export default function EmailSignUpScreen({navigation}: any) {
+
+  const dispatch = useDispatch();
+
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
 
@@ -59,9 +67,15 @@ export default function EmailSignUpScreen({navigation}: any) {
         <Button
           title="Sign Up with Google"
           isLoading={loadingGoogle}
-          onPressFtn={() => {
+          onPressFtn={async () => {
             setLoadingGoogle(true);
-            googleAuth().finally(() => {
+            googleAuth().then(async ()=>{
+              const userid = auth().currentUser?.uid;
+              dispatch(setUserId(userid));
+              const userData = await fetchUserDataFirestore(userid!);
+              dispatch(setUserData(userData));
+              navigation.replace("HomeStack");
+            }).finally(() => {
               setLoadingGoogle(false);
             });
           }}

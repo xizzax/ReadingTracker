@@ -34,25 +34,12 @@ export async function googleAuth() {
   // Sign-in the user with the credential
   await auth().signInWithCredential(googleCredential);
 
-  // await makeNewDocumentForUser(
-  //   auth().currentUser?.uid as string
-  // );
-
-  // console.log('user id: ', auth().currentUser?.uid);
   const userDataExists =  await firestore()
     .collection('user_data').doc(auth().currentUser?.uid).get();
 
   if (!userDataExists.exists) {
     await makeNewDocumentForUser(auth().currentUser?.uid as string);
   }
-  else {
-    console.log('user already exists');
-    console.log("user id: ", auth().currentUser?.uid);
-      const userData = await firestore()
-        .collection('user_data')
-        .doc(auth().currentUser?.uid)
-        .get(); //TODO: use this to populate user data later
-      console.log('User data: ', userData.id);
-  }
+  
   return;
 }

@@ -22,7 +22,7 @@ export default function WelcomeScreen({navigation}:any) {
     if(user){
       console.log("currently logged in : ", user.uid);
       dispatch(setUserId(user.uid));
-    const userData = await fetchUserDataFirestore(user.uid);
+      const userData = await fetchUserDataFirestore(user.uid);
      dispatch(setUserData(userData));
       navigation.replace('HomeStack');
 

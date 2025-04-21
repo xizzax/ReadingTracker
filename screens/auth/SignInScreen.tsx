@@ -1,17 +1,20 @@
-import {View, Text, StyleSheet, SafeAreaView, Pressable} from 'react-native';
+import {View, Text, StyleSheet, SafeAreaView} from 'react-native';
 import Button from '../../components/buttons/Button';
-import {screenDimensions} from '../../constants/ScreenDimensions';
-import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {googleAuth} from '../../firebase/auth/google/GoogleSignIn';
-import {Colors} from '../../constants/Colors';
 import {globalTextStyles} from '../../styles/TextStyles';
 import {useState} from 'react';
 import TextButton from '../../components/buttons/TextButton';
+import { useDispatch } from 'react-redux';
+import { setUserData, setUserId } from '../../state/slices/user_data/UserDataSlice';
+import { fetchUserDataFirestore } from '../../firebase/firestore/FirestoreFunctions';
+import auth from '@react-native-firebase/auth';
+
 
 //TODO: android googlre sign in setup (from google sign in library)
 //TODO: multiple auth methods for one firebase user
 export default function SignInScreen({navigation}: any) {
   const [loadingGoogle, setLoadingGoogle] = useState(false);
+  const dispatch = useDispatch();
 
   return (
     <SafeAreaView style={signInScreenStyles.container}>
@@ -21,10 +24,18 @@ export default function SignInScreen({navigation}: any) {
         <Button
           title="Sign In with Google"
           isLoading={loadingGoogle}
-          onPressFtn={() => {
+          onPressFtn={async () => {
             setLoadingGoogle(true);
-            googleAuth().finally(() => {
-              setLoadingGoogle(false); //TODO: add set loading to sign in screen too
+            googleAuth()
+            .then(async ()=>{
+              const userid = auth().currentUser?.uid;
+              dispatch(setUserId(userid));
+              const userData = await fetchUserDataFirestore(userid!);
+              dispatch(setUserData(userData));
+              navigation.replace("HomeStack");
+            })
+            .finally(() => {
+              setLoadingGoogle(false); 
             });
           }}
         />
