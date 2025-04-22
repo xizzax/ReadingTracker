@@ -51,6 +51,7 @@ export default function EmailSignUpScreen({navigation}: any) {
 
     await emailSignUp(name, email, password)
       .then(() => {
+        dispatch(setUserId(auth().currentUser?.uid));
         navigation.navigate('HomeStack', {screen: 'SetGoal'});
       })
       .finally(() => {

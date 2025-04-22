@@ -13,7 +13,6 @@ const homeStackNavigator = createStackNavigator();
 
 export default function HomeStackNavigator() {
   const goalSet = useSelector(state => state.userDataState.goal.goalSet);
-  console.log("goalset: ", goalSet);
   return (
 
     // <NavigationContainer>

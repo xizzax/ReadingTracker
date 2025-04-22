@@ -11,7 +11,7 @@ import {
   UIManager,
   ScrollView,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {screenDimensions} from '../../constants/ScreenDimensions';
 import {globalTextStyles} from '../../styles/TextStyles';
 import {Calendar, CalendarList, Agenda} from 'react-native-calendars';
@@ -24,8 +24,9 @@ import Button from '../../components/buttons/Button';
 import ReadingNowBook from '../../components/ReadingNowBook';
 import {globalStyleNumerics} from '../../constants/StyleNumerics';
 import {signout} from '../../firebase/auth/SignOut';
-import {useDispatch} from 'react-redux';
-import {reset} from '../../state/slices/user_data/UserDataSlice';
+import {useDispatch, useSelector} from 'react-redux';
+import {addTodayToReadingHistory, reset} from '../../state/slices/user_data/UserDataSlice';
+import { checkTodaysReadingHistoryFirestore } from '../../firebase/firestore/FirestoreFunctions';
 
 if (Platform.OS === 'android') {
   if (UIManager.setLayoutAnimationEnabledExperimental) {
@@ -34,7 +35,26 @@ if (Platform.OS === 'android') {
 }
 
 export default function HomeScreen({navigation}: any) {
+
+  const userId = useSelector(state => state.userDataState.userId);
+
   const dispatch = useDispatch();
+
+  useEffect(() => { //TODO: run function depending on stopwatch val or smthng
+    const readingHistoryCheck = async() => {
+      const todayExists = await checkTodaysReadingHistoryFirestore(userId);
+      if(todayExists){
+        console.log("today reading history exist");
+      }
+      else{
+        console.log("today reading history does not exist");
+        dispatch(addTodayToReadingHistory());
+      }
+    }
+
+    readingHistoryCheck();
+    
+  }, []);
 
   // CALENDAR
   const [calendarVisible, setCalendarVisible] = useState(false);
@@ -126,7 +146,6 @@ export default function HomeScreen({navigation}: any) {
         {/* goal section */}
         <View style={homeScreenStyles.goalSection}>
           <View style={homeScreenStyles.goalTextContainer}>
-            {/* TODO: dont show icon if not today */}
             <Text
               style={{
                 ...homeScreenStyles.goalText,
@@ -134,7 +153,7 @@ export default function HomeScreen({navigation}: any) {
               }}>
               {today === selectedDate ? "Today's Goal" : 'Goal'}
             </Text>
-            <Pressable //TODO: instead of this one, click on book to continue reading and log stats for that
+            {/* <Pressable //TODO: instead of this one, click on book to continue reading and log stats for that
               onPress={() => navigation.navigate('Stopwatch')}
               style={homeScreenStyles.playIconContainer}>
               <Icon
@@ -142,7 +161,7 @@ export default function HomeScreen({navigation}: any) {
                 size={globalStyleNumerics.iconSize}
                 color={Colors.primary}
               />
-            </Pressable>
+            </Pressable> */}
           </View>
           <View style={homeScreenStyles.goalProgressIndicatorContainer}>
             <GoalProgressIndicator

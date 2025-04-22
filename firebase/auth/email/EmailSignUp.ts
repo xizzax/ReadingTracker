@@ -30,5 +30,7 @@ export async function emailSignUp(
       }
 
       console.error(error);
+    }).finally(()=>{
+      console.log("goalIssue1: user doc created");
     });
 }

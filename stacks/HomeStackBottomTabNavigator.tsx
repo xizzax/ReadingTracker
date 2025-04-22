@@ -25,9 +25,7 @@ export default function HomeStackBottomTabNavigator() {
           headerShown: false,
           headerTitle: '',
           headerShadowVisible: false, //TODO: move logout and calendar icons up??
-
           sceneStyle: {backgroundColor: 'white'}, // for all screens
-
           tabBarActiveTintColor: Colors.primary,
           tabBarInactiveTintColor: Colors.gray,
           tabBarShowLabel: false,

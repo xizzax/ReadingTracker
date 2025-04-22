@@ -1,39 +1,37 @@
 import {View, Text, StyleSheet} from 'react-native';
 import {AnimatedCircularProgress} from 'react-native-circular-progress';
-import {Circle} from 'react-native-svg';
 import {Colors} from '../constants/Colors';
 import {screenDimensions} from '../constants/ScreenDimensions';
 import {useState, useEffect} from 'react';
-import {FlipInYLeft} from 'react-native-reanimated';
 import {globalTextStyles} from '../styles/TextStyles';
+import { useSelector } from 'react-redux';
 
-interface GoalProgressIndicatorProps {
-  goalTimeSeconds: number;
-  elapsedTimeSeconds: number;
-}
 
-export default function GoalProgressIndicator(
-  props: GoalProgressIndicatorProps,
-) {
-  const {goalTimeSeconds, elapsedTimeSeconds} = props;
-  const [fill, setFill] = useState(
-    (elapsedTimeSeconds / goalTimeSeconds) * 100,
-  );
 
-  //TODO: see if it can be replaced with helper
-  //elapsed time minutes and hours
-  const elapsedTimeMinutes = Math.floor(elapsedTimeSeconds / 60);
-  const elapsedTimeHours = Math.floor(elapsedTimeMinutes / 60);
-  const elapsedTimeMinutesLeft = elapsedTimeMinutes % 60;
+export default function GoalProgressIndicator() {
 
-  //goal time minutes and hours
-  const goalTimeMinutes = Math.floor(goalTimeSeconds / 60);
-  const goalTimeHours = Math.floor(goalTimeMinutes / 60);
-  const goalTimeMinutesLeft = goalTimeMinutes % 60;
 
-  useEffect(() => {
-    setFill((elapsedTimeSeconds / goalTimeSeconds) * 100);
-  }, [elapsedTimeSeconds, goalTimeSeconds]);
+  const goalTime = useSelector(state => state.userDataState.goal.currentGoal);
+
+  // const {goalTimeSeconds, elapsedTimeSeconds} = props;
+  // const [fill, setFill] = useState(
+  //   (elapsedTimeSeconds / goalTimeSeconds) * 100,
+  // );
+
+  // //TODO: see if it can be replaced with helper
+  // //elapsed time minutes and hours
+  // const elapsedTimeMinutes = Math.floor(elapsedTimeSeconds / 60);
+  // const elapsedTimeHours = Math.floor(elapsedTimeMinutes / 60);
+  // const elapsedTimeMinutesLeft = elapsedTimeMinutes % 60;
+
+  // //goal time minutes and hours
+  // const goalTimeMinutes = Math.floor(goalTimeSeconds / 60);
+  // const goalTimeHours = Math.floor(goalTimeMinutes / 60);
+  // const goalTimeMinutesLeft = goalTimeMinutes % 60;
+
+  // useEffect(() => {
+  //   setFill((elapsedTimeSeconds / goalTimeSeconds) * 100);
+  // }, [elapsedTimeSeconds, goalTimeSeconds]);
 
   return (
     <View style={goalProgressIndicatorStyles.container}>
@@ -41,7 +39,7 @@ export default function GoalProgressIndicator(
         size={screenDimensions.height * 0.3}
         width={10}
         lineCap="round"
-        fill={fill}
+        fill={75}
         tintColor={Colors.primary}
         arcSweepAngle={200}
         rotation={260}
@@ -53,25 +51,14 @@ export default function GoalProgressIndicator(
                 ...globalTextStyles.headerText,
                 ...goalProgressIndicatorStyles.elapsedTimeText,
               }}>
-              {elapsedTimeHours.toString().padStart(2, '0')}:
-              {elapsedTimeMinutesLeft.toString().padStart(2, '0')}
+              23:00
             </Text>
             <Text
               style={{
                 ...globalTextStyles.bodyText,
                 ...goalProgressIndicatorStyles.goalText,
               }}>
-              of your
-              {goalTimeHours > 0 || goalTimeMinutesLeft > 0
-                ? `${goalTimeHours > 0 ? `${goalTimeHours} hour` : ''}${
-                    goalTimeHours > 0 && goalTimeMinutesLeft > 0 ? ' ' : ''
-                  }${
-                    goalTimeMinutesLeft > 0
-                      ? `${goalTimeMinutesLeft} minute`
-                      : ''
-                  }`
-                : '0 hour 0 minute'}
-              goal
+              of your 3 hour 2 minute goal
             </Text>
           </View>
         )}

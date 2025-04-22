@@ -71,9 +71,6 @@ export default function SetGoalScreen({navigation}:any) {
               latestDuration?.minutes?.current!,
               latestDuration?.seconds?.current!,
             );
-
-            console.log('Goal time: ', goalTime);
-            
             dispatch(setGoal(
               {
                 goalSet: true,
