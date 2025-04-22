@@ -50,7 +50,7 @@ export async function setGoalFirestore(
       },
     })
     .catch(e => {
-      console.log("errorrrrr: ", e);
+      console.log("error: ", e);
     });
 }
 
@@ -83,8 +83,6 @@ export async function checkTodaysReadingHistoryFirestore(userId: string){
   await firestore().collection('user_data').doc(userId).get().then(
     (doc)=>{
      const readingHistory = doc.get("reading_history") || [];
-     console.log("reading history: ", readingHistory);
-     console.log("type of reading history: ", typeof readingHistory);
      const today = new Date();
      const todayFormatted = `${String(today.getDate()).padStart(2, '0')}-${String(today.getMonth() + 1).padStart(2, '0')}-${today.getFullYear()}`;
 
@@ -94,7 +92,6 @@ export async function checkTodaysReadingHistoryFirestore(userId: string){
        return entryDate === todayFormatted;
      });
 
-     console.log("Today's Reading Entry:", todaysEntry);
      return todaysEntry;
     }
   ).catch((error) => {

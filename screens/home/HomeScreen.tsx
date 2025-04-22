@@ -35,19 +35,13 @@ if (Platform.OS === 'android') {
 }
 
 export default function HomeScreen({navigation}: any) {
-
   const userId = useSelector(state => state.userDataState.userId);
 
   const dispatch = useDispatch();
-
   useEffect(() => { //TODO: run function depending on stopwatch val or smthng
     const readingHistoryCheck = async() => {
       const todayExists = await checkTodaysReadingHistoryFirestore(userId);
-      if(todayExists){
-        console.log("today reading history exist");
-      }
-      else{
-        console.log("today reading history does not exist");
+      if(!todayExists){
         dispatch(addTodayToReadingHistory());
       }
     }
@@ -55,6 +49,12 @@ export default function HomeScreen({navigation}: any) {
     readingHistoryCheck();
     
   }, []);
+
+  const todaysReadingTime = useSelector(state => 
+    state.userDataState.readingHistory.length > 0 
+      ? state.userDataState.readingHistory[state.userDataState.readingHistory.length - 1].readingTime 
+      : 0
+  );
 
   // CALENDAR
   const [calendarVisible, setCalendarVisible] = useState(false);
@@ -164,10 +164,8 @@ export default function HomeScreen({navigation}: any) {
             </Pressable> */}
           </View>
           <View style={homeScreenStyles.goalProgressIndicatorContainer}>
-            <GoalProgressIndicator
-              goalTimeSeconds={14400}
-              elapsedTimeSeconds={7600}
-            />
+            <GoalProgressIndicator 
+            elapsedTimeSeconds={todaysReadingTime}/>
           </View>
         </View>
 

@@ -5,14 +5,18 @@ import {screenDimensions} from '../constants/ScreenDimensions';
 import {useState, useEffect} from 'react';
 import {globalTextStyles} from '../styles/TextStyles';
 import { useSelector } from 'react-redux';
+import { totalSecondsToHHMMSS_string } from '../helper/TotalSecondsToHHMMSS';
 
+interface goalProgressIndicatorProps {
+  elapsedTimeSeconds: number;
+}
 
-
-export default function GoalProgressIndicator() {
-
-
+export default function GoalProgressIndicator(props: goalProgressIndicatorProps) {
   const goalTime = useSelector(state => state.userDataState.goal.currentGoal);
 
+  // if(!todaysReadingTime){
+  //   todaysReadingTime = "no";
+  // }
   // const {goalTimeSeconds, elapsedTimeSeconds} = props;
   // const [fill, setFill] = useState(
   //   (elapsedTimeSeconds / goalTimeSeconds) * 100,
@@ -39,7 +43,7 @@ export default function GoalProgressIndicator() {
         size={screenDimensions.height * 0.3}
         width={10}
         lineCap="round"
-        fill={75}
+        fill={(props.elapsedTimeSeconds / goalTime) * 100}
         tintColor={Colors.primary}
         arcSweepAngle={200}
         rotation={260}
@@ -51,14 +55,14 @@ export default function GoalProgressIndicator() {
                 ...globalTextStyles.headerText,
                 ...goalProgressIndicatorStyles.elapsedTimeText,
               }}>
-              23:00
+              {totalSecondsToHHMMSS_string(props.elapsedTimeSeconds).slice(0, 5)}
             </Text>
             <Text
               style={{
                 ...globalTextStyles.bodyText,
                 ...goalProgressIndicatorStyles.goalText,
               }}>
-              of your 3 hour 2 minute goal
+              of your {totalSecondsToHHMMSS_string(goalTime)} goal
             </Text>
           </View>
         )}
