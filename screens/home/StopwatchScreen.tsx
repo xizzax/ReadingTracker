@@ -24,7 +24,8 @@ import {
   incrementElapsedTime,
 } from '../../state/slices/TimeElapsedSlice';
 import Stopwatch from '../../components/Stopwatch';
-import { screenDimensions } from '../../constants/ScreenDimensions';
+import {screenDimensions} from '../../constants/ScreenDimensions';
+import {useStopwatch} from 'react-timer-hook';
 
 interface StopwatchScreenProps {
   //TODO: props
@@ -39,12 +40,18 @@ export default function StopwatchScreen(props: StopwatchScreenProps) {
   );
   const dispatch = useDispatch();
 
-  //--------------------------------------------
-  //hour minute calculations and state
-  //--------------------------------------------
-  // const [secondsElapsed, setSecondsElapsed] = useState(0);
-  // const [minutesElapsed, setMinutesElapsed] = useState(0);
-  // const [hoursElapsed, setHoursElapsed] = useState(0);
+  const {
+    totalSeconds,
+    milliseconds,
+    seconds,
+    minutes,
+    hours,
+    days,
+    isRunning,
+    start,
+    pause,
+    reset,
+  } = useStopwatch({autoStart: false});
 
   const [totalSecondsElapsed, setTotalSecondsElapsed] = useState(0);
 
@@ -53,53 +60,26 @@ export default function StopwatchScreen(props: StopwatchScreenProps) {
     'running' | 'paused' | 'stopped'
   >('paused');
 
-
   const timeRef = useRef<ReturnType<typeof setInterval> | null>(null); //used to store interval
 
   const startTimer = () => {
-    if (stopwatchState != 'running') {
-      setStopwatchState('running');
-      dispatch(setRunning());
-
-      timeRef.current = setInterval(() => {
-        // const time = useSelector(state =>state.elapsedTimeState.elapsedTime);
-        dispatch(incrementElapsedTime());
-      }, 1000);
-    }
+    setStopwatchState('running');
+    start();
   };
   const stopTimer = () => {
-    if (timeRef.current) {
-      clearInterval(timeRef.current);
-      timeRef.current = null;
-      setStopwatchState('stopped');
-      dispatch(setStopped());
-      dispatch(setElapsedTime(0));
-    } else {
-      timeRef.current = setInterval(() => {
-        setTotalSecondsElapsed(prevTime => prevTime);
-      }, 1000);
-      clearInterval(timeRef.current);
-      timeRef.current = null;
-      setStopwatchState('stopped');
-      dispatch(setStopped());
-      dispatch(setElapsedTime(0));
-    }
+    setStopwatchState('stopped');
+    reset();
   };
   //TODO: save timer state in redux until stopped for persistence
   const pauseTimer = () => {
-    if (timeRef.current) {
-      clearInterval(timeRef.current);
-      timeRef.current = null;
-      setStopwatchState('paused');
-      dispatch(setPaused());
-    }
+    setStopwatchState('paused');
+    pause();
   };
 
   //--------------------------------------------
   // color animations
   //--------------------------------------------
   const colorAnim = useState(new Animated.Value(0))[0]; // 0 = paused/stopped (inactive), 1 = running
-  
 
   useEffect(() => {
     // When the stopwatchState changes, animate to the correct value.
@@ -116,7 +96,10 @@ export default function StopwatchScreen(props: StopwatchScreenProps) {
   });
   const containerHeightAnim = colorAnim.interpolate({
     inputRange: [0, 1],
-    outputRange: [screenDimensions.height * 2/5,screenDimensions.height * 4/5]
+    outputRange: [
+      (screenDimensions.height * 2) / 5,
+      (screenDimensions.height * 2) / 3,
+    ],
   });
 
   const backgroundInterpolatedColor = colorAnim.interpolate({
@@ -143,7 +126,12 @@ export default function StopwatchScreen(props: StopwatchScreenProps) {
         </Text>
 
         <View>
-          <Stopwatch />
+          {/* <Stopwatch /> */}
+          <Text style={{...globalTextStyles.headerText, fontSize: 40}}>
+            {hours.toString().padStart(2, '0')}:
+            {minutes.toString().padStart(2, '0')}:
+            {seconds.toString().padStart(2, '0')}
+          </Text>
         </View>
       </Animated.View>
 
@@ -156,7 +144,6 @@ export default function StopwatchScreen(props: StopwatchScreenProps) {
                   stopwatchScreenStyles.mainButtonContainer,
                   {
                     backgroundColor: interpolatedColor,
-                 
                   },
                 ]}>
                 <Icon

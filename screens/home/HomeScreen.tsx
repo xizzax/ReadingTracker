@@ -4,8 +4,6 @@ import {
   SafeAreaView,
   StyleSheet,
   Pressable,
-  Animated,
-  Easing,
   LayoutAnimation,
   Platform,
   UIManager,
@@ -14,7 +12,7 @@ import {
 import React, {useEffect, useState} from 'react';
 import {screenDimensions} from '../../constants/ScreenDimensions';
 import {globalTextStyles} from '../../styles/TextStyles';
-import {Calendar, CalendarList, Agenda} from 'react-native-calendars';
+import {CalendarList} from 'react-native-calendars';
 import moment from 'moment';
 import {Colors} from '../../constants/Colors';
 import GoalProgressIndicator from '../../components/GoalProgressIndicator';
