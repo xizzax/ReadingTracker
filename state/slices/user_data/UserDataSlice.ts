@@ -28,7 +28,20 @@ export const userDataSlice = createSlice({
             state.goal.goalSet = action.payload.goal.goal_set;
             state.goal.currentGoal = action.payload.goal.time_in_seconds;
 
-            
+            const reading_history = action.payload.reading_history;
+            // console.log("reading history: ", reading_history);
+
+            reading_history.forEach(item => {
+                state.readingHistory.push(
+                    {
+                        date: item.date,
+                        goalTime: item.goal_time,
+                        readingTime: item.reading_time,
+                        breakdown: item.breakdown, //TODO: add breakdown when it comes to book history
+                    }
+                );
+                
+            });
 
         },
         setUserId: (state, action) => {

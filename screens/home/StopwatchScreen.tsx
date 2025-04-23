@@ -1,45 +1,36 @@
 import {
   Text,
-  View,
-  SafeAreaView,
-  StyleSheet,
+  View, StyleSheet,
   Pressable,
-  Animated,
+  Animated
 } from 'react-native';
-import {CountdownCircleTimer} from 'react-native-countdown-circle-timer';
 import Icon from 'react-native-vector-icons/Ionicons';
-import {Colors} from '../../constants/Colors';
-import {globalStyleNumerics} from '../../constants/StyleNumerics';
-import CircularTimer from 'react-native-circular-timer';
-import React, {useEffect, useRef, useState} from 'react';
-import {globalTextStyles} from '../../styles/TextStyles';
-import {useDispatch, useSelector} from 'react-redux';
-import {
-  setPaused,
-  setRunning,
-  setStopped,
-} from '../../state/slices/TimerStateSlice';
-import {
-  setElapsedTime,
-  incrementElapsedTime,
-} from '../../state/slices/TimeElapsedSlice';
-import Stopwatch from '../../components/Stopwatch';
-import {screenDimensions} from '../../constants/ScreenDimensions';
-import {useStopwatch} from 'react-timer-hook';
+import { Colors } from '../../constants/Colors';
+import { globalStyleNumerics } from '../../constants/StyleNumerics';
+import React, { useEffect, useRef, useState } from 'react';
+import { globalTextStyles } from '../../styles/TextStyles';
+import { useDispatch, useSelector } from 'react-redux';
+import { screenDimensions } from '../../constants/ScreenDimensions';
+import { useStopwatch } from 'react-timer-hook';
 import { updateTodaysReadingTime } from '../../state/slices/user_data/UserDataSlice';
 
-interface StopwatchScreenProps {
-  //TODO: props
-}
 
-export default function StopwatchScreen(props: StopwatchScreenProps) {
-  //--------------------------------------------
-  //redux setup
-  //--------------------------------------------
+export default function StopwatchScreen() {
   const stopwatchStateFromStore = useSelector(
-    state => state.timerState.timerState,
+    (state: any) => state.timerState.timerState,
   );
+
+  const elapsedTime = useSelector((state: any) => 
+    state.userDataState.readingHistory.length > 0 
+      ? state.userDataState.readingHistory[state.userDataState.readingHistory.length - 1].readingTime 
+      : 0
+  );
+
   const dispatch = useDispatch();
+  
+  const stopwatchOffset = new Date(); 
+  stopwatchOffset.setSeconds(stopwatchOffset.getSeconds() + elapsedTime);
+
 
   const {
     totalSeconds,
@@ -52,16 +43,13 @@ export default function StopwatchScreen(props: StopwatchScreenProps) {
     start,
     pause,
     reset,
-  } = useStopwatch({autoStart: false});
-
-  const [totalSecondsElapsed, setTotalSecondsElapsed] = useState(0);
+  } = useStopwatch({autoStart: false, offsetTimestamp: stopwatchOffset});
 
   // TODO: remove this and only use redux for this -- do we even need this without redux
   const [stopwatchState, setStopwatchState] = useState<
     'running' | 'paused' | 'stopped'
   >('paused');
 
-  const timeRef = useRef<ReturnType<typeof setInterval> | null>(null); //used to store interval
 
   const startTimer = () => {
     setStopwatchState('running');
