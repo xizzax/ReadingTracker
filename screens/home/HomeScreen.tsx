@@ -23,8 +23,8 @@ import ReadingNowBook from '../../components/ReadingNowBook';
 import {globalStyleNumerics} from '../../constants/StyleNumerics';
 import {signout} from '../../firebase/auth/SignOut';
 import {useDispatch, useSelector} from 'react-redux';
-import {addTodayToReadingHistory, reset} from '../../state/slices/user_data/UserDataSlice';
-import { checkTodaysReadingHistoryFirestore } from '../../firebase/firestore/FirestoreFunctions';
+import {addTodayToReadingHistory, reset, updateTodaysReadingTime} from '../../state/slices/user_data/UserDataSlice';
+import { checkTodaysReadingHistoryFirestore, getTodaysReadingTimeFirestore } from '../../firebase/firestore/FirestoreFunctions';
 
 if (Platform.OS === 'android') {
   if (UIManager.setLayoutAnimationEnabledExperimental) {
@@ -40,7 +40,16 @@ export default function HomeScreen({navigation}: any) {
     const readingHistoryCheck = async() => {
       const todayExists = await checkTodaysReadingHistoryFirestore(userId);
       if(!todayExists){
+        console.log(todayExists);
+        console.log("today doesn't exist, adding to firestore!");
         dispatch(addTodayToReadingHistory());
+      }
+      else{
+      const todaysReadingTime = await getTodaysReadingTimeFirestore(userId);
+      if(todaysReadingTime){
+        console.log('todays reading time: ', todaysReadingTime);
+        dispatch(updateTodaysReadingTime(todaysReadingTime));
+      }
       }
     }
 
@@ -53,7 +62,7 @@ export default function HomeScreen({navigation}: any) {
       ? state.userDataState.readingHistory[state.userDataState.readingHistory.length - 1].readingTime 
       : 0
   );
-
+  
   // CALENDAR
   const [calendarVisible, setCalendarVisible] = useState(false);
   const toggleVisibility = () => {

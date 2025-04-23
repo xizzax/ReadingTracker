@@ -36,7 +36,6 @@ export default function WelcomeScreen({navigation}:any) {
 
   
 
-
   return (
     <SafeAreaView style={{flex: 1}}>
       <View style={welcomeScreenStyles.screen}>

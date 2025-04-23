@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit"
-import { addTodaytoReadingHistoryFirestore, setGoalFirestore } from "../../../firebase/firestore/FirestoreFunctions";
+import { addTodaytoReadingHistoryFirestore, setGoalFirestore, updateTodaysReadingTimeFirestore } from "../../../firebase/firestore/FirestoreFunctions";
 import { compatibilityFlags } from "react-native-screens";
 
 type readingHistory = {
@@ -27,6 +27,9 @@ export const userDataSlice = createSlice({
             ////for setting data gotten from firebase////
             state.goal.goalSet = action.payload.goal.goal_set;
             state.goal.currentGoal = action.payload.goal.time_in_seconds;
+
+            
+
         },
         setUserId: (state, action) => {
             state.userId = action.payload;
@@ -59,9 +62,10 @@ export const userDataSlice = createSlice({
         },
         updateTodaysReadingTime: (state, action)=>{
             state.readingHistory[state.readingHistory.length - 1].readingTime = action.payload;
+            updateTodaysReadingTimeFirestore(state.userId!, action.payload);
         },
     },
 })
 
-export const { reset, setUserId, setGoal, setUserData, addTodayToReadingHistory } = userDataSlice.actions;
+export const { reset, setUserId, setGoal, setUserData, addTodayToReadingHistory, updateTodaysReadingTime } = userDataSlice.actions;
 export default userDataSlice.reducer;

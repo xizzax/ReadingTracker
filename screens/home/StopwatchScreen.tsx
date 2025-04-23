@@ -26,6 +26,7 @@ import {
 import Stopwatch from '../../components/Stopwatch';
 import {screenDimensions} from '../../constants/ScreenDimensions';
 import {useStopwatch} from 'react-timer-hook';
+import { updateTodaysReadingTime } from '../../state/slices/user_data/UserDataSlice';
 
 interface StopwatchScreenProps {
   //TODO: props
@@ -68,12 +69,14 @@ export default function StopwatchScreen(props: StopwatchScreenProps) {
   };
   const stopTimer = () => {
     setStopwatchState('stopped');
+    dispatch(updateTodaysReadingTime(totalSeconds));
     reset();
   };
   //TODO: save timer state in redux until stopped for persistence
   const pauseTimer = () => {
     setStopwatchState('paused');
     pause();
+    dispatch(updateTodaysReadingTime(totalSeconds));
   };
 
   //--------------------------------------------
