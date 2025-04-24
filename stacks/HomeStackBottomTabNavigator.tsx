@@ -7,7 +7,7 @@ import {Colors} from '../constants/Colors';
 import {globalStyleNumerics} from '../constants/StyleNumerics';
 import SearchBookScreen from '../screens/home/SearchBookScreen';
 import {NavigationContainer} from '@react-navigation/native';
-import UserProfileScreen from '../screens/home/UserProfile';
+import UserProfileScreen from '../screens/home/UserProfileScreen';
 import StatsScreen from '../screens/home/StatsScreen';
 import {TabBarButton} from '../components/buttons/TabBarButton';
 import {StopwatchTabBarButton} from '../components/buttons/StopwatchTabBarButton';

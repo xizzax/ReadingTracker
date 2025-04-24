@@ -16,10 +16,6 @@ import { updateTodaysReadingTime } from '../../state/slices/user_data/UserDataSl
 
 
 export default function StopwatchScreen() {
-  const stopwatchStateFromStore = useSelector(
-    (state: any) => state.timerState.timerState,
-  );
-
   const elapsedTime = useSelector((state: any) => 
     state.userDataState.readingHistory.length > 0 
       ? state.userDataState.readingHistory[state.userDataState.readingHistory.length - 1].readingTime 

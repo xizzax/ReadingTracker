@@ -83,25 +83,7 @@ export default function HomeScreen({navigation}: any) {
       TODO: add dark mode */}
 
         <View style={homeScreenStyles.topHeader}>
-          <Pressable
-            onPress={async () => {
-              console.log('logout goes here');
-              await signout().then(() => {
-                dispatch(reset());
-                //timeout for half second to let state reset
-                setTimeout(() => {
-                  navigation.replace('AuthStack');
-                }, 500);
-              });
-            }}>
-            <View style={homeScreenStyles.calendarButton}>
-              <Icon
-                name="log-out-outline"
-                size={globalStyleNumerics.iconSize}
-                color={Colors.primary}
-              />
-            </View>
-          </Pressable>
+         
 
           <Pressable onPress={toggleVisibility}>
             <View style={homeScreenStyles.calendarButton}>
@@ -171,8 +153,7 @@ export default function HomeScreen({navigation}: any) {
             </Pressable> */}
           </View>
           <View style={homeScreenStyles.goalProgressIndicatorContainer}>
-            <GoalProgressIndicator 
-            elapsedTimeSeconds={todaysReadingTime}/>
+            <GoalProgressIndicator />
           </View>
         </View>
 
