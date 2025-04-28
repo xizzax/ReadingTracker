@@ -23,8 +23,15 @@ import ReadingNowBook from '../../components/ReadingNowBook';
 import {globalStyleNumerics} from '../../constants/StyleNumerics';
 import {signout} from '../../firebase/auth/SignOut';
 import {useDispatch, useSelector} from 'react-redux';
-import {addTodayToReadingHistory, reset, updateTodaysReadingTime} from '../../state/slices/user_data/UserDataSlice';
-import { checkTodaysReadingHistoryFirestore, getTodaysReadingTimeFirestore } from '../../firebase/firestore/FirestoreFunctions';
+import {
+  addTodayToReadingHistory,
+  reset,
+  updateTodaysReadingTime,
+} from '../../state/slices/user_data/UserDataSlice';
+import {
+  checkTodaysReadingHistoryFirestore,
+  getTodaysReadingTimeFirestore,
+} from '../../firebase/firestore/FirestoreFunctions';
 
 if (Platform.OS === 'android') {
   if (UIManager.setLayoutAnimationEnabledExperimental) {
@@ -34,35 +41,50 @@ if (Platform.OS === 'android') {
 
 export default function HomeScreen({navigation}: any) {
   const userId = useSelector(state => state.userDataState.userId);
-
   const dispatch = useDispatch();
-  useEffect(() => { //TODO: run function depending on stopwatch val or smthng
-    const readingHistoryCheck = async() => {
+
+  //checking for today's progress
+  useEffect(() => {
+    //TODO: run function depending on stopwatch val or smthng
+    const readingHistoryCheck = async () => {
       const todayExists = await checkTodaysReadingHistoryFirestore(userId);
-      if(!todayExists){
+      if (!todayExists) {
         console.log(todayExists);
         console.log("today doesn't exist, adding to firestore!");
         dispatch(addTodayToReadingHistory());
+      } else {
+        const todaysReadingTime = await getTodaysReadingTimeFirestore(userId);
+        if (todaysReadingTime) {
+          console.log('todays reading time: ', todaysReadingTime);
+          dispatch(updateTodaysReadingTime(todaysReadingTime));
+        }
       }
-      else{
-      const todaysReadingTime = await getTodaysReadingTimeFirestore(userId);
-      if(todaysReadingTime){
-        console.log('todays reading time: ', todaysReadingTime);
-        dispatch(updateTodaysReadingTime(todaysReadingTime));
-      }
-      }
-    }
-
+    };
     readingHistoryCheck();
-    
   }, []);
-
-  const todaysReadingTime = useSelector(state => 
-    state.userDataState.readingHistory.length > 0 
-      ? state.userDataState.readingHistory[state.userDataState.readingHistory.length - 1].readingTime 
-      : 0
+  const todaysReadingTime = useSelector(state =>
+    state.userDataState.readingHistory.length > 0
+      ? state.userDataState.readingHistory[
+          state.userDataState.readingHistory.length - 1
+        ].readingTime
+      : 0,
   );
-  
+
+  //currently reading books
+  const currentlyReading = useSelector((state:any) => state.userDataState.currentlyReading);
+
+  type currentBook = {
+    isbn: string,
+    startDate: string, 
+    totalPages: number,
+    timeRead: number,
+    readPages: number,
+    progress: number,
+    title: string, //get from api
+    author: string,
+    coverUrl: string,
+  }
+
   // CALENDAR
   const [calendarVisible, setCalendarVisible] = useState(false);
   const toggleVisibility = () => {
@@ -79,12 +101,7 @@ export default function HomeScreen({navigation}: any) {
   return (
     <SafeAreaView>
       <ScrollView>
-        {/* <Icon name="moon-outline" size={30} color={Colors.primary} /> 
-      TODO: add dark mode */}
-
         <View style={homeScreenStyles.topHeader}>
-         
-
           <Pressable onPress={toggleVisibility}>
             <View style={homeScreenStyles.calendarButton}>
               <Icon
@@ -142,15 +159,6 @@ export default function HomeScreen({navigation}: any) {
               }}>
               {today === selectedDate ? "Today's Goal" : 'Goal'}
             </Text>
-            {/* <Pressable //TODO: instead of this one, click on book to continue reading and log stats for that
-              onPress={() => navigation.navigate('Stopwatch')}
-              style={homeScreenStyles.playIconContainer}>
-              <Icon
-                name="play-outline"
-                size={globalStyleNumerics.iconSize}
-                color={Colors.primary}
-              />
-            </Pressable> */}
           </View>
           <View style={homeScreenStyles.goalProgressIndicatorContainer}>
             <GoalProgressIndicator />
@@ -166,7 +174,7 @@ export default function HomeScreen({navigation}: any) {
               ...homeScreenStyles.readingNowHeader,
               ...globalTextStyles.headerText,
             }}>
-            Reading Now
+            Currently Reading
           </Text>
           <Button
             title="+ Book"
@@ -174,37 +182,18 @@ export default function HomeScreen({navigation}: any) {
           />
           {/* book section */}
           <View style={homeScreenStyles.bookSection}>
-            <ScrollView>
-              <ReadingNowBook
-                title="Pride and Prejudice"
-                author="Jane Austen"
-                progress={50}
-              />
-              <ReadingNowBook
-                title="The Great Gatsby"
-                author="F. Scott Fitzgerald"
-                progress={30}
-              />
-              <ReadingNowBook
-                title="The Catcher in the Rye"
-                author="J.D. Salinger"
-                progress={10}
-              />
+            <ScrollView> 
+             {currentlyReading.map((book:any ) => { //TODO: add types
+             console.log(book);
+                return (
+                  <ReadingNowBook 
+                  title='hello'
+                  author='author'
+                  progress={book.progress} />
+                )
+             })}
             </ScrollView>
           </View>
-        </View>
-
-        <Divider />
-
-        {/* this week header */}
-        <View style={homeScreenStyles.thisWeekHeader}>
-          <Text
-            style={{
-              ...homeScreenStyles.thisWeekHeader,
-              ...globalTextStyles.headerText,
-            }}>
-            This Week
-          </Text>
         </View>
       </ScrollView>
     </SafeAreaView>

@@ -8,7 +8,6 @@ interface ReadingNowBookProps {
   title: string;
   author: string;
   progress: number;
-  //TODO: add image url too
 }
 
 export default function ReadingNowBook(props: ReadingNowBookProps) {

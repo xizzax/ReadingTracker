@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit"
 import { addTodaytoReadingHistoryFirestore, setGoalFirestore, updateTodaysReadingTimeFirestore } from "../../../firebase/firestore/FirestoreFunctions";
 import { compatibilityFlags } from "react-native-screens";
+import { booksSlice } from "../BooksSlice";
 
 type readingHistory = {
     date: string,
@@ -9,9 +10,20 @@ type readingHistory = {
     breakdown: [] //TODO: add breakdown type (books etc)
 }
 
+type currentlyReadingBook = {
+    isbn: string,
+    startDate: string, 
+    totalPages: number,
+    timeRead: number,
+    readPages: number,
+    progress: number, // not in firebase
+
+}
+
 const initialState = {
     userId: null,
     readingHistory: [] as readingHistory[],
+    currentlyReading: [] as currentlyReadingBook[],
     goal: {
         goalSet: false,
         currentGoal: 0,
@@ -24,13 +36,12 @@ export const userDataSlice = createSlice({
     reducers: {
         reset: () => initialState, //reset all data
         setUserData: (state, action) =>{
-            ////for setting data gotten from firebase////
+            //goal
             state.goal.goalSet = action.payload.goal.goal_set;
             state.goal.currentGoal = action.payload.goal.time_in_seconds;
 
+            //reading history
             const reading_history = action.payload.reading_history;
-            // console.log("reading history: ", reading_history);
-
             reading_history.forEach(item => {
                 state.readingHistory.push(
                     {
@@ -42,6 +53,23 @@ export const userDataSlice = createSlice({
                 );
                 
             });
+
+            //currently reading
+            const currently_reading = action.payload.currently_reading;
+            console.log("currently reading: ", currently_reading);
+            currently_reading.forEach(currentBook => {
+                state.currentlyReading.push(
+                    {
+                        isbn: currentBook.isbn,
+                        startDate: currentBook.start_date,
+                        totalPages: currentBook.total_pages,
+                        timeRead: currentBook.time_read,
+                        readPages: currentBook.read_pages,
+                        progress: (currentBook.read_pages / currentBook.total_pages) * 100,
+                    }
+                );
+            });
+            console.log("currenly reading state: ", state.currentlyReading);
 
         },
         setUserId: (state, action) => {
