@@ -32,6 +32,8 @@ import {
   checkTodaysReadingHistoryFirestore,
   getTodaysReadingTimeFirestore,
 } from '../../firebase/firestore/FirestoreFunctions';
+import {useSearchBooksQuery} from '../../state/slices/ApiSlice';
+import {connectFirestoreEmulator} from '@react-native-firebase/firestore';
 
 if (Platform.OS === 'android') {
   if (UIManager.setLayoutAnimationEnabledExperimental) {
@@ -49,13 +51,10 @@ export default function HomeScreen({navigation}: any) {
     const readingHistoryCheck = async () => {
       const todayExists = await checkTodaysReadingHistoryFirestore(userId);
       if (!todayExists) {
-        console.log(todayExists);
-        console.log("today doesn't exist, adding to firestore!");
         dispatch(addTodayToReadingHistory());
       } else {
         const todaysReadingTime = await getTodaysReadingTimeFirestore(userId);
         if (todaysReadingTime) {
-          console.log('todays reading time: ', todaysReadingTime);
           dispatch(updateTodaysReadingTime(todaysReadingTime));
         }
       }
@@ -71,19 +70,63 @@ export default function HomeScreen({navigation}: any) {
   );
 
   //currently reading books
-  const currentlyReading = useSelector((state:any) => state.userDataState.currentlyReading);
+  const currentlyReadingFromState = useSelector(
+    (state: any) => state.userDataState.currentlyReading,
+  );
+  const [triggerSearch, {data: searchedBooks, isLoading, error}] =
+    useSearchBooksQuery();
 
   type currentBook = {
-    isbn: string,
-    startDate: string, 
-    totalPages: number,
-    timeRead: number,
-    readPages: number,
-    progress: number,
-    title: string, //get from api
-    author: string,
-    coverUrl: string,
-  }
+    isbn: string;
+    startDate: string;
+    totalPages: number;
+    timeRead: number;
+    readPages: number;
+    progress: number;
+    title: string; //get from api
+    authors: [];
+    coverUrl: string;
+  };
+
+  // const currentlyReading: currentBook[] = [];
+  const [currentlyReading, setCurrentlyReading] = useState<currentBook[]>([]);
+
+  useEffect(() => {
+    const fetchDetails = async (isbn: string) => {
+      const searchQuery = 'isbn:' + isbn;
+      const dataBooks = await triggerSearch(searchQuery);
+
+     
+      return {
+        title: dataBooks.data![0].title,
+        authors: dataBooks.data![0].authors,
+        coverUrl: dataBooks.data![0].coverUrl,
+      };
+    };
+
+    const populateBooksArray = async () => {
+      await currentlyReadingFromState.forEach( async book => {
+        const result = await fetchDetails(book.isbn);
+        console.log("result: ", result)
+        const newObj = {
+          isbn: book.isbn,
+          startDate: book.startDate,
+          totalPages: book.totalPages,
+          timeRead: book.timeRead,
+          readPages: book.readpages,
+          progress: book.progress,
+          title: result?.title ? result.title: 'no title',
+          authors: result?.authors ? result.authors : 'no author',
+          coverUrl: result?.coverUrl ? result.coverUrl : 'no cover url',
+        };
+
+        setCurrentlyReading(prevState => [...prevState, newObj]);
+        console.log("currently reading: ", currentlyReading);
+      });
+    };
+
+    populateBooksArray();
+  }, [currentlyReadingFromState]);
 
   // CALENDAR
   const [calendarVisible, setCalendarVisible] = useState(false);
@@ -182,16 +225,19 @@ export default function HomeScreen({navigation}: any) {
           />
           {/* book section */}
           <View style={homeScreenStyles.bookSection}>
-            <ScrollView> 
-             {currentlyReading.map((book:any ) => { //TODO: add types
-             console.log(book);
+            <ScrollView>
+              { currentlyReading.map((book: any, index:number) => {
+                console.log("currently reading scroll view: ", currentlyReading);
                 return (
-                  <ReadingNowBook 
-                  title='hello'
-                  author='author'
-                  progress={book.progress} />
-                )
-             })}
+                  <ReadingNowBook
+                    key={index}
+                    title={book.title}
+                    author={book.authors[0]}
+                    progress={book.progress}
+                    coverUrl={book.coverUrl}
+                  />
+                );
+              })}
             </ScrollView>
           </View>
         </View>

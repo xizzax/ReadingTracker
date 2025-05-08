@@ -7,9 +7,8 @@ export const apiSlice = createApi({
     search: builder.query({
       query: term => `?q=${term}&maxResults=20`,
       transformResponse: response => {
-        console.log('API response:', response);
-        let books = [];
-        response.items.forEach(book => {
+        let books: any[] | Promise<any[]> = [];
+        response.items.forEach((book: { volumeInfo: { title: any; subtitle: any; description: any; authors: any; categories: any; imageLinks: { thumbnail: string; }; industryIdentifiers: { identifier: any; }[]; }; }) => {
             const tempObj = {
             title: book.volumeInfo.title,
             subtitle: book.volumeInfo.subtitle,
@@ -23,12 +22,10 @@ export const apiSlice = createApi({
             };
           books.push(tempObj);
         });
-        console.log("formatted response: "+books);
-        
         return books;
       },
     }),
   }),
 });
 
-export const {useLazySearchQuery} = apiSlice;
+export const {useLazySearchQuery: useSearchBooksQuery} = apiSlice;

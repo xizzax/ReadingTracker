@@ -8,6 +8,7 @@ interface ReadingNowBookProps {
   title: string;
   author: string;
   progress: number;
+  coverUrl: string;
 }
 
 export default function ReadingNowBook(props: ReadingNowBookProps) {
@@ -16,7 +17,9 @@ export default function ReadingNowBook(props: ReadingNowBookProps) {
       <View style={readingNowBookStyles.container2}>
         <View style={readingNowBookStyles.imageView}>
           <Image
-            source={require('../assets/images/book1.jpg')}
+             source={{
+              uri: props.coverUrl,
+            }}
             style={readingNowBookStyles.image}
           />
         </View>
@@ -48,7 +51,7 @@ export default function ReadingNowBook(props: ReadingNowBookProps) {
           lineCap="round"
           tintColor={Colors.primary}
           backgroundColor={Colors.lightGray}>
-          {fill => <Text>{props.progress}%</Text>}
+          {fill => <Text>{props.progress.toFixed(0)}%</Text>}
         </AnimatedCircularProgress>
       </View>
     </View>

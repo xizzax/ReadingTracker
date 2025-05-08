@@ -56,7 +56,6 @@ export const userDataSlice = createSlice({
 
             //currently reading
             const currently_reading = action.payload.currently_reading;
-            console.log("currently reading: ", currently_reading);
             currently_reading.forEach(currentBook => {
                 state.currentlyReading.push(
                     {
@@ -69,8 +68,6 @@ export const userDataSlice = createSlice({
                     }
                 );
             });
-            console.log("currenly reading state: ", state.currentlyReading);
-
         },
         setUserId: (state, action) => {
             state.userId = action.payload;

@@ -20,7 +20,7 @@ export default function WelcomeScreen({navigation}:any) {
     listener.current(); // getting rid of listener after one call
     setUser(user);
     if(user){
-      console.log("currently logged in : ", user.uid);
+      // console.log("currently logged in : ", user.uid);
       dispatch(setUserId(user.uid));
       const userData = await fetchUserDataFirestore(user.uid);
      dispatch(setUserData(userData));

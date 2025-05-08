@@ -8,7 +8,7 @@ import {
   Pressable,
   ScrollView,
 } from 'react-native';
-import {useLazySearchQuery} from '../../state/slices/ApiSlice';
+import {useSearchBooksQuery} from '../../state/slices/ApiSlice';
 import {Colors} from '../../constants/Colors';
 import {globalStyleNumerics} from '../../constants/StyleNumerics';
 import Icon from 'react-native-vector-icons/Ionicons'; //no error
@@ -24,7 +24,7 @@ export default function SearchBookScreen() {
   //---------------------------------------
   const [searchQuery, setSearchQuery] = useState('');
   const [searched, setSearched] = useState(false);
-  const [triggerSearch, {data: books, isLoading, error}] = useLazySearchQuery();
+  const [triggerSearch, {data: books, isLoading, error}] = useSearchBooksQuery();
 
   const handleSubmit = (query: string) => {
     const formattedQuery = query.toLowerCase().split(' ').join('+');
