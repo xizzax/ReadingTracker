@@ -32,7 +32,6 @@ export async function setGoalFirestore(
   goalSet: boolean,
   time_in_seconds: number,
 ) {
-
   await firestore()
     .collection('user_data')
     .doc(userId)
@@ -43,7 +42,7 @@ export async function setGoalFirestore(
       },
     })
     .catch(e => {
-      console.log("error: ", e);
+      console.log('error: ', e);
     });
 }
 
@@ -72,14 +71,19 @@ export async function addTodaytoReadingHistoryFirestore(
     });
 }
 
-export async function checkTodaysReadingHistoryFirestore(userId: string): Promise<any | false> {
+export async function checkTodaysReadingHistoryFirestore(
+  userId: string,
+): Promise<any | false> {
   try {
     const doc = await firestore().collection('user_data').doc(userId).get();
-    const readingHistory = doc.get("reading_history");
+    const readingHistory = doc.get('reading_history');
     // console.log("reading history: ", readingHistory);
 
     const today = new Date();
-    const todayFormatted = `${String(today.getDate()).padStart(2, '0')}-${String(today.getMonth() + 1).padStart(2, '0')}-${today.getFullYear()}`;
+    const todayFormatted = `${String(today.getDate()).padStart(
+      2,
+      '0',
+    )}-${String(today.getMonth() + 1).padStart(2, '0')}-${today.getFullYear()}`;
 
     // Filter history for today's entry
     const todaysEntry = readingHistory.find((entry: any) => {
@@ -88,48 +92,130 @@ export async function checkTodaysReadingHistoryFirestore(userId: string): Promis
     });
     return todaysEntry;
   } catch (error) {
-    console.log("Error getting document:", error);
+    console.log('Error getting document:', error);
     return false;
   }
 }
 
-export async function updateTodaysReadingTimeFirestore(userId: string, readingTime: number){
+export async function updateTodaysReadingTimeFirestore(
+  userId: string,
+  readingTime: number,
+) {
   const docRef = firestore().collection('user_data').doc(userId);
-  console.log("doc ref gotten");
-  await docRef.get().then(
-    async (doc)=>{
-      const readingHistory = doc.get("reading_history") || [];
-     const today = new Date();
-     const todayFormatted = `${String(today.getDate()).padStart(2, '0')}-${String(today.getMonth() + 1).padStart(2, '0')}-${today.getFullYear()}`;
+  console.log('doc ref gotten');
+  await docRef
+    .get()
+    .then(async doc => {
+      const readingHistory = doc.get('reading_history') || [];
+      const today = new Date();
+      const todayFormatted = `${String(today.getDate()).padStart(
+        2,
+        '0',
+      )}-${String(today.getMonth() + 1).padStart(
+        2,
+        '0',
+      )}-${today.getFullYear()}`;
 
-     const index = readingHistory.findIndex((entry: any) => entry.date === todayFormatted);
-     if (index !== -1) {
-      // Update readingTime for today's entry
-      readingHistory[index].reading_time  = readingTime;
-    }
-    
-    await docRef.update({
-      reading_history: readingHistory,
-    });
-    }
-  ).catch((e)=>console.log("error getting today's reading time", e))
+      const index = readingHistory.findIndex(
+        (entry: any) => entry.date === todayFormatted,
+      );
+      if (index !== -1) {
+        // Update readingTime for today's entry
+        readingHistory[index].reading_time = readingTime;
+      }
+
+      await docRef.update({
+        reading_history: readingHistory,
+      });
+    })
+    .catch(e => console.log("error getting today's reading time", e));
 }
 
-
-export async function getTodaysReadingTimeFirestore(userId: string){
+export async function getTodaysReadingTimeFirestore(userId: string) {
   const docRef = firestore().collection('user_data').doc(userId);
-  await docRef.get().then(
-    async (doc)=>{
-      const readingHistory = doc.get("reading_history") || [];
-     const today = new Date();
-     const todayFormatted = `${String(today.getDate()).padStart(2, '0')}-${String(today.getMonth() + 1).padStart(2, '0')}-${today.getFullYear()}`;    
+  await docRef
+    .get()
+    .then(async doc => {
+      const readingHistory = doc.get('reading_history') || [];
+      const today = new Date();
+      const todayFormatted = `${String(today.getDate()).padStart(
+        2,
+        '0',
+      )}-${String(today.getMonth() + 1).padStart(
+        2,
+        '0',
+      )}-${today.getFullYear()}`;
 
-     const index = readingHistory.findIndex((entry: any) => entry.date === todayFormatted);
-     if (index !== -1) {
-      // Update readingTime for today's entry
-      return readingHistory[index].reading_time;
-    }
-    }
-  ).catch((e)=>console.log("error getting today's reading time", e))
+      const index = readingHistory.findIndex(
+        (entry: any) => entry.date === todayFormatted,
+      );
+      if (index !== -1) {
+        // Update readingTime for today's entry
+        return readingHistory[index].reading_time;
+      }
+    })
+    .catch(e => console.log("error getting today's reading time", e));
 }
 
+export async function updateReadingProgressFirestore(
+  userId: string,
+  isbn: string,
+  pagesRead: number,
+) {
+  const docRef = firestore().collection('user_data').doc(userId);
+  console.log('doc ref gotten');
+  await docRef
+    .get()
+    .then(async doc => {
+      const currentlyReading = doc.get('currently_reading') || [];
+      const index = currentlyReading.findIndex(
+        (book: any) => book.isbn === isbn,
+      );
+      if (index !== -1) {
+        // Update readingTime for today's entry
+        currentlyReading[index].read_pages = pagesRead;
+      }
+
+      await docRef.update({
+        currently_reading: currentlyReading,
+      });
+    })
+    .then(() =>
+      console.log('reading progress updated in firestore successfully'),
+    )
+    .catch(e => console.log('error updating reading progress', e));
+}
+
+export async function updateReadBooksFirestore (
+  userId: string,
+  isbn: string,
+  startDate: string,
+  endDate: string,
+  timeRead: number,
+  review: string,
+  readPages: number,
+  totalPages: number
+){
+  const docRef = firestore().collection('user_data').doc(userId);
+
+  // remove book from currently reading
+  await docRef.update({
+    currently_reading: firestore.FieldValue.arrayRemove({
+      isbn: isbn,
+      read_pages: readPages,
+      start_date: startDate,
+      time_read: timeRead,
+      total_pages: totalPages,
+    }),
+  });
+
+  await docRef.update({
+    finished_books: firestore.FieldValue.arrayUnion({
+      isbn: isbn,
+      start_date: startDate,
+      end_date: endDate,
+      time_read: timeRead,
+      review: review,
+    }),
+  });
+}

@@ -17,7 +17,10 @@ type textInputFieldProps = {
   placeholder?: string;
   scrollEnabled?: boolean;
   secureTextEntry?: boolean;
-//   lineBreakStrategyIOS? : "none" | "standard" | "hangul-word" | "push-out";
+  width?: number;
+  height?: number;
+  borderRadius?: number;
+  //   lineBreakStrategyIOS? : "none" | "standard" | "hangul-word" | "push-out";
 
   iconName?: string;
   iconFtn?: () => void;
@@ -25,40 +28,49 @@ type textInputFieldProps = {
 
 export default function TextInputField(props: textInputFieldProps) {
   return (
-    <View style={textInputFieldStyles.container}>
-      <TextInput //TODO: fix the overflow issue
-      autoCapitalize="none"
-      autoCorrect={false}
-      cursorColor={Colors.primary}
-      placeholder={props.placeholder}
-      placeholderTextColor={Colors.gray}
-      textAlign="left"
+    <View
       style={{
-        ...textInputFieldStyles.textInput,
-        width: props.iconName
-        ? screenDimensions.width * 0.8
-        : screenDimensions.width * 0.9,
-      }}
-      autoComplete={props.autocomplete}
-      autoFocus={props.autoFocus}
-      clearButtonMode={props.clearButtonMode}
-      enterKeyHint={props.enterKeyHint}
-      inputMode={props.inputMode}
-      keyboardType={props.keyboardType}
-      multiline={props.multiline}
-      onChangeText={props.onChangeText}
-      onSubmitEditing={props.onSubmitEditing}
-      secureTextEntry={props.secureTextEntry}
-      scrollEnabled={props.scrollEnabled}
+        ...textInputFieldStyles.container,
+        width: props.width ? props.width : screenDimensions.width * 0.9,
+        height: props.height ? props.height : 60,
+        borderRadius: props.borderRadius ? props.borderRadius : globalStyleNumerics.borderRadius,
+
+      }}>
+      <TextInput //TODO: fix the overflow issue
+        autoCapitalize="none"
+        autoCorrect={false}
+        cursorColor={Colors.primary}
+        placeholder={props.placeholder}
+        placeholderTextColor={Colors.gray}
+        textAlign="left"
+        style={{
+          ...textInputFieldStyles.textInput,
+          width: props.iconName
+            ? screenDimensions.width * 0.8
+            : screenDimensions.width * 0.9,
+          height: props.height ? props.height - (props.height * 0.05) : 60,
+          borderRadius: props.borderRadius ? props.borderRadius : globalStyleNumerics.borderRadius,
+        }}
+        autoComplete={props.autocomplete}
+        autoFocus={props.autoFocus}
+        clearButtonMode={props.clearButtonMode}
+        enterKeyHint={props.enterKeyHint}
+        inputMode={props.inputMode}
+        keyboardType={props.keyboardType}
+        multiline={props.multiline}
+        onChangeText={props.onChangeText}
+        onSubmitEditing={props.onSubmitEditing}
+        secureTextEntry={props.secureTextEntry}
+        scrollEnabled={props.scrollEnabled}
       />
       {props.iconName && (
-      <Pressable onPress={props.iconFtn}>
-        <Icon
-        name={props.iconName}
-        size={globalStyleNumerics.iconSize - 5}
-        color={Colors.gray}
-        />
-      </Pressable>
+        <Pressable onPress={props.iconFtn}>
+          <Icon
+            name={props.iconName}
+            size={globalStyleNumerics.iconSize - 5}
+            color={Colors.gray}
+          />
+        </Pressable>
       )}
     </View>
   );
@@ -68,10 +80,7 @@ const textInputFieldStyles = StyleSheet.create({
   container: {
     borderWidth: 1,
     borderColor: Colors.gray,
-    width: screenDimensions.width * 0.9,
-    padding:10,
-    height: 60,
-    borderRadius: globalStyleNumerics.borderRadius,
+    padding: 10,
     marginVertical: 10,
     fontSize: 16,
     flexDirection: 'row',
@@ -80,10 +89,11 @@ const textInputFieldStyles = StyleSheet.create({
   },
   textInput: {
     fontSize: 16,
-    height: 60,
-    borderRadius: globalStyleNumerics.borderRadius,
+    
     flex: 1,
     paddingRight: 10,
-
+    paddingLeft: 10,
+    paddingVertical: 5,
+    marginVertical: 5,
   },
 });

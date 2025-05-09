@@ -17,7 +17,7 @@ export default function TextButton(props: textBtnProps) {
          ...textBtnStyles.btnStyle,
           fontSize: props.fontSize ?? 16,
         }}>
-        Sign Up
+        {props.title}
       </Text>
     </Pressable>
   );

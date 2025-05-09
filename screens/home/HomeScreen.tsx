@@ -105,15 +105,16 @@ export default function HomeScreen({navigation}: any) {
     };
 
     const populateBooksArray = async () => {
+      setCurrentlyReading([]); // emptying array to prevent duplicates
       await currentlyReadingFromState.forEach( async book => {
         const result = await fetchDetails(book.isbn);
-        console.log("result: ", result)
+        // console.log("result: ", result)
         const newObj = {
           isbn: book.isbn,
           startDate: book.startDate,
           totalPages: book.totalPages,
           timeRead: book.timeRead,
-          readPages: book.readpages,
+          readPages: book.readPages,
           progress: book.progress,
           title: result?.title ? result.title: 'no title',
           authors: result?.authors ? result.authors : 'no author',
@@ -121,7 +122,7 @@ export default function HomeScreen({navigation}: any) {
         };
 
         setCurrentlyReading(prevState => [...prevState, newObj]);
-        console.log("currently reading: ", currentlyReading);
+        // console.log("currently reading: ", currentlyReading);
       });
     };
 
@@ -227,14 +228,17 @@ export default function HomeScreen({navigation}: any) {
           <View style={homeScreenStyles.bookSection}>
             <ScrollView>
               { currentlyReading.map((book: any, index:number) => {
-                console.log("currently reading scroll view: ", currentlyReading);
+                // console.log("currently reading scroll view: ", currentlyReading);
                 return (
                   <ReadingNowBook
                     key={index}
+                    isbn={book.isbn}
                     title={book.title}
                     author={book.authors[0]}
                     progress={book.progress}
                     coverUrl={book.coverUrl}
+                    totalPages={book.totalPages}
+                    readPages={book.readPages}
                   />
                 );
               })}
